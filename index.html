@@ -690,7 +690,7 @@ function showSales(){
   '<div class="wine-order-options">'+
   '<div class="wine-order-option"><div><strong>🍷 Çelik tank</strong><div class="muted small">Stok: '+stock.steel+' şişe</div><div class="muted small">Standart şarap</div></div><div class="wine-order-price">'+fmt(payoutFor(o,"steel"))+' ₺</div>'+
   '<button class="btn primary full" '+(stock.steel<o.qty?'disabled':'')+' onclick="deliver('+o.id+',\'steel\')">Çelik stoktan sat</button></div>'+
-  '<div class="wine-order-option oak"><div><strong>🪵 Meşede olgunlaşmış</strong><div class="muted small">Stok: '+stock.oak+' şişe · +%'+oakPremium+'</div><div class="muted small">'+(stock.oak>0?'Mevcut fıçı olgunlaştırma primi':'14 günlük tahmini meşe primi')+'</div></div><div class="wine-order-price">'+fmt(payoutFor(o,"oak"))+' ₺</div>'+
+  '<div class="wine-order-option oak"><div><strong>🪵 Meşede olgunlaşmış</strong><div class="muted small">Stok: '+stock.oak+' şişe · +%'+oakPremium+'</div><div class="muted small">'+(stock.oak>0?'7 / 14 / 28 günlük fıçı sürelerinden hesaplanan prim':'Stok oluşunca 7 / 14 / 28 gün olgunlaştırma primine göre güncellenir')+'</div></div><div class="wine-order-price">'+fmt(payoutFor(o,"oak"))+' ₺</div>'+
   '<button class="btn primary full" '+(stock.oak<o.qty?'disabled':'')+' onclick="deliver('+o.id+',\'oak\')">Meşe stoktan sat</button></div></div>'+
   (mix?'<div class="wine-order-mixed"><div><b>🍷 + 🪵 Karma teslimat</b><div class="small muted">'+mix.steel+' çelik + '+mix.oak+' meşe · '+fmt(payoutFor(o,"mixed",mix.oak))+' ₺</div></div><button class="btn" onclick="deliver('+o.id+',\'mixed\')">Birlikte sat</button></div>':'')+
   '</div>';
