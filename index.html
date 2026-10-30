@@ -135,7 +135,7 @@ function makeOrder(){
  const name=CUSTOMERS[s.id%CUSTOMERS.length];
  const id=++s.id;
  s.orders.push({id,name,grape:g.id,qty,price,deadline:gameHour()+96});
- if(s.view!=="sales"){s.unreadIds.push(id);s.unread=s.unreadIds.length;toast("🔔 "+name+" yeni sipariş gönderdi!")}
+ if(!($("modalOverlay").classList.contains("open")&&s.view==="sales")){s.unreadIds.push(id);s.unread=s.unreadIds.length;toast("🔔 "+name+" yeni sipariş gönderdi!")}
  log(name+" "+qty+" şişe "+g.name+" istedi.");
 }
 function refreshExpiredOrders(){
