@@ -313,14 +313,14 @@ function showMarket(){
  const locked=level()<g.level;
  const offers=s.offers.filter(o=>o.grape===g.id).sort((a,b)=>quoteOffer(a,10).total-quoteOffer(b,10).total);
  const min=Math.min(...offers.map(o=>quoteOffer(o,10).total));
- return '<section class="offer-grape"><div class="offer-heading"><div><h3>🍇 '+g.name+' '+(locked?'🔒':'')+'</h3><span class="muted small">'+g.category+' · '+g.style+' · Stok: '+(s.grapes[g.id]||0).toFixed(2)+' kg</span></div><div class="small">'+(locked?'Seviye '+g.level:'En ucuz 10 kg '+fmt(min)+' ₺')+'</div></div>'+
+ return '<section class="offer-grape"><div class="offer-heading"><div><h3>🍇 '+g.name+' '+(locked?'🔒':'')+'</h3><span class="muted small">'+g.category+' · '+g.style+' · Stok: '+(s.grapes[g.id]||0).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})+' kg</span></div><div class="small">'+(locked?'Seviye '+g.level:'En ucuz 10 kg '+fmt(min)+' ₺')+'</div></div>'+
  (locked?'<div class="hint">Bu üzüm seviye '+g.level+' düzeyinde açılır.</div>':
  offers.map(o=>{const q=quoteOffer(o,10),discount=q.total===min;return '<div class="offer-row"><div class="offer-info"><b>'+escapeHtml(o.producer)+'</b>'+(discount?'<span class="offer-deal">Uygun teklif</span>':'')+
  '<div class="small muted">'+o.origin+' · '+fmt(q.km)+' km · '+fmt(o.price)+' ₺/kg · Nakliye '+fmt(q.freight)+' ₺</div>'+
  '<div class="small muted">⏳ '+(o.expires-gameHour())+' oyun saati kaldı</div></div><div class="offer-actions"><strong>'+fmt(q.total)+' ₺ <small>/ 10 kg</small></strong>'+
  '<div><button class="btn" '+(s.cash<q.total?'disabled':'')+' onclick="buyOffer('+o.id+',10)">10 kg</button><button class="btn primary" '+(s.cash<quoteOffer(o,20).total?'disabled':'')+' onclick="buyOffer('+o.id+',20)">20 kg</button></div></div></div>'}).join(""))+'</section>';
  }).join("")+'</div>'+
- '<div class="hint">Depo firesi: '+fmt(Object.values(s.grapeWaste).reduce((a,b)=>a+b,0))+' kg toplam. İlk gün fire yok; sonraki günlerde küçük kayıplar oluşur. Bağından gelen üzümler de bekledikçe fire verebilir.</div>';
+ '<div class="hint">Depo firesi: '+Object.values(s.grapeWaste).reduce((a,b)=>a+b,0).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})+' kg toplam. İlk gün fire yok; sonraki günlerde küçük kayıplar oluşur. Bağından gelen üzümler de bekledikçe fire verebilir.</div>';
 }
 function buyOffer(id,kg){
  ensureOffers();
