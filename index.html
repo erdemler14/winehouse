@@ -109,7 +109,7 @@ function closePanel(){
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closePanel()});
 
 function buyOakBarrel(){
- if(level()<3)return toast("Meşe fıçısı seviye 3'te açılır.");
+ if(level()<3+2*s.barrels)return toast("Yeni meşe fıçısı için seviye "+(3+2*s.barrels)+" gerekli.");
  const cost=4500+1800*s.barrels;
  if(s.cash<cost)return toast("Meşe fıçısı için yeterli nakit yok.");
  s.cash-=cost;s.barrels++;log("Yeni meşe fıçısı satın alındı.");save();toast("🪵 Meşe fıçısı hazır.");
@@ -132,7 +132,7 @@ function oakPanel(){
  let html='<h3 style="margin-top:25px">🪵 Meşe Fıçıları</h3>'+
  '<p class="muted small">Şarapları şişelemeden önce fıçılara alabilirsin. Her fıçı en fazla 14 şişe eşdeğeri alır. Süre uzadıkça kalite primi üzüm çeşidine göre değişir.</p>'+
  '<div class="row"><span>Meşe fıçısı</span><b>'+s.barrels+' adet · '+s.agingJobs.length+' dolu</b></div>'+
- (level()<3?'<div class="hint">🔒 Seviye 3 düzeyinde meşe fıçısı açılacak.</div>':'<button class="btn" onclick="buyOakBarrel()" '+(s.cash<4500+1800*s.barrels?'disabled':'')+'>+ Meşe fıçısı al · '+fmt(4500+1800*s.barrels)+' ₺</button>');
+ (level()<3?'<div class="hint">🔒 Seviye 3 düzeyinde meşe fıçısı açılacak.</div>':'<button class="btn" onclick="buyOakBarrel()" '+(level()<3+2*s.barrels||s.cash<4500+1800*s.barrels?'disabled':'')+'>+ Meşe fıçısı al · '+fmt(4500+1800*s.barrels)+' ₺</button>');
  if(s.barrels>0)html+='<h3 style="margin-top:18px">Fıçıya Aktar</h3>'+
  (ready.length?ready.map(g=>'<div class="item"><div><h3>'+escapeHtml(g.name)+'</h3><div class="small muted">Stok '+s.wine[g.id]+' şişe · Meşe uyumu: '+(g.oak==="long"?"Uzun":g.oak==="light"?"Kısa":"Orta")+'</div><div class="name-row" style="margin-top:9px"><select id="oakQty-'+g.id+'" aria-label="Fıçı miktarı"><option value="7">7 şişe</option><option value="14">14 şişe</option></select><select id="oakDays-'+g.id+'" aria-label="Meşede bekletme süresi"><option value="7">7 gün</option><option value="14">14 gün</option><option value="28">28 gün</option></select></div></div><button class="btn primary" '+(s.agingJobs.length>=s.barrels?'disabled':'')+' onclick="beginAging(\''+g.id+'\')">Başlat</button></div>').join(""):'<div class="hint">Fıçıya alınacak en az 7 şişelik şarap üretmelisin.</div>');
  if(s.agingJobs.length)html+='<h3 style="margin-top:20px">Olgunlaşan Partiler</h3>'+s.agingJobs.map(j=>'<div class="row"><span>'+escapeHtml(WINE(j.id)?.name||"Şarap")+' · '+j.qty+' şişe</span><b>'+Math.max(0,Math.ceil((j.finish-gameHour())/24))+' gün kaldı</b></div>').join("");
@@ -149,7 +149,7 @@ function showFactory(){
 function showFinance(){
  const qty=Object.values(s.grapes).reduce((a,b)=>a+b,0);
  const stock=GRAPES.reduce((a,g)=>a+(s.grapes[g.id]||0)*g.price,0);
- const daily=85*s.tanks;
+ const daily=85*s.tanks+18*s.barrels;
  $("content").innerHTML='<p class="muted small">İşletme maliyetlerini ve nakit durumunu buradan takip edebilirsin.</p><div class="wine-chips"><div><small>Nakit</small><strong>'+fmt(s.cash)+' ₺</strong></div><div><small>Günlük sabit gider</small><strong>'+fmt(daily)+' ₺</strong></div><div><small>Üzüm stok değeri</small><strong>'+fmt(stock)+' ₺</strong></div></div><div class="scene-finance"><div class="row"><span>Depodaki üzüm</span><b>'+qty+' kg</b></div><div class="row"><span>Toplam tank yatırımı</span><b>'+s.tanks+' tank</b></div><div class="row"><span>Aktif üretim</span><b>'+s.jobs.length+' parti</b></div><div class="row"><span>Aktif sipariş</span><b>'+s.orders.length+' adet</b></div><div class="row"><span>Bağ arazisi</span><b>'+s.land.length+' adet</b></div></div><p class="hint">Nakliye ve üzüm maliyetleri oyun ekonomisi için temsili olarak belirlenmiştir.</p>';
 }
 function showSettings(){
@@ -286,7 +286,7 @@ function hour(){
  s.hour++;
  if(s.hour===24){
   s.hour=0;s.day++;
-  if(s.built)s.cash-=85*s.tanks;
+  if(s.built)s.cash-=85*s.tanks+18*s.barrels;
  }
  const now=gameHour();
  const done=s.jobs.filter(j=>j.finish<=now);
