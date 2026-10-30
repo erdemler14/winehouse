@@ -47,6 +47,7 @@ html,body{height:100%;overflow:hidden}body{background:#c7d8be;color:#26362f}
  .blend-creator{background:#f7f5f1;border:1px solid #e8e4db;border-radius:15px;padding:14px;margin-top:10px}.blend-selectors{display:grid;grid-template-columns:1fr 1fr;gap:9px}.blend-creator select{padding:11px;width:100%;border:1px solid #d9dcd7;border-radius:10px;background:#fff;color:#293e34}.blend-creator .input-label{font-size:13px}.blend-creator .hidden{display:none!important}@media(max-width:600px){.blend-selectors{grid-template-columns:1fr}}
 .name-row select{padding:10px;border:1px solid #d9dcd7;border-radius:10px;background:#fff;color:#293e34;max-width:100%}.staff-current,.staff-card{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #e4e7e3;background:white;border-radius:13px;padding:13px;margin:10px 0}.staff-card{background:#fcfcf9}.staff-card>div,.staff-current>div{flex:1;min-width:0}.staff-current .btn,.staff-card .btn{flex-shrink:0}.staff-pay{font-size:12px;color:#70354e;font-weight:700;margin-top:8px}.staff-plot{border:1px solid #e6e7e3;border-radius:16px;padding:16px;margin:18px 0;background:#fffdfa}.staff-plot>h3{font-size:18px}.staff-plot .btn{margin:6px 0}.staff-plot .name-input{width:auto;max-width:100%}#content .seg{margin-bottom:10px}@media(max-width:550px){.staff-current,.staff-card{align-items:stretch;flex-direction:column}.staff-card .btn,.staff-current .btn{align-self:flex-start}}
 .order-overview{margin:14px 0 20px}.order-overview strong{font-size:16px}.order-overview small{font-size:11px}@media(max-width:520px){.order-overview{grid-template-columns:repeat(3,1fr)}.order-overview>div{padding:9px 7px}.order-overview strong{font-size:13px}}
+ .tank-list{display:grid;gap:8px;margin:13px 0 20px}.tank-unit{display:grid;grid-template-columns:105px 1fr 135px;align-items:center;gap:10px;background:#fff;border:1px solid #e7e7e5;border-radius:12px;padding:12px;font-size:13px}.tank-unit b{font-size:12px;text-align:right}.tank-meter{height:9px;border-radius:20px;background:#e9ebe7;overflow:hidden}.tank-meter span{display:block;height:100%;background:#75956d;border-radius:20px}.tank-actions{display:flex;flex-direction:column;gap:7px}.tank-actions .btn{white-space:nowrap;padding:8px 10px}@media(max-width:580px){.tank-unit{grid-template-columns:85px 1fr 105px;gap:6px;padding:9px;font-size:11px}.tank-unit b{font-size:11px}.tank-actions{flex-direction:row}}
 </style></head><body>
 <div class="world" aria-label="Pastel bağlar, Türkiye köyleri ve şaraphane illüstrasyonu"></div>
 <header class="topbar"><div class="brand">🍇 Winehouse</div><div class="fill"></div><span class="topinfo"><b id="money">35.000</b> ₺</span><span class="topdivider"></span><span class="topinfo">★ <b id="level">1</b>. Seviye</span><span class="topdivider"></span><span class="topinfo">☀ <b id="clock">1. Gün, 08:00</b></span><button class="btn small clockpause" aria-label="Zamanı durdur veya devam ettir" id="pause" onclick="pauseGame()">⏸</button></header>
@@ -154,7 +155,7 @@ function save(){
 function toast(t){$("toast").textContent=t;$("toast").classList.add("show");clearTimeout(window.to);window.to=setTimeout(()=>$("toast").classList.remove("show"),2800)}
 function render(){ $("money").textContent=fmt(s.cash);$("level").textContent=level();$("clock").textContent=s.day+". Gün, "+String(s.hour).padStart(2,"0")+":00";$("pause").textContent=s.paused?"▶":"⏸";$("setup").classList.toggle("hidden",s.built);$("game").classList.toggle("hidden",!s.built);$("stage").textContent=s.built?s.city+" · Seviye "+level():"Kurulum aşaması";$("headline").textContent=s.built?(s.wineryName||"Şaraphanem"):"Kendi şaraphaneni kur.";$("subtitle").textContent=s.built?"Üzümünü seç, üretimini yönet, siparişlere yetiş.":"Türkiye'de üretim yapacağın şehri seçerek başla.";
 if(!s.built){$("map").innerHTML=CITIES.map(c=>'<button class="pin '+(c.n===s.city?"on":"")+'" style="left:'+c.x+'%;top:'+c.y+'%" onclick="selectCity(\''+c.n+'\')">'+c.n+'</button>').join("");$("cities").innerHTML=CITIES.map(c=>'<button class="city '+(c.n===s.city?"active":"")+'" onclick="selectCity(\''+c.n+'\')"><b>'+c.n+'</b><small>Kurulum '+fmt(c.fee)+' ₺</small></button>').join("");$("estimate").innerHTML='<div class="row"><span>Seçilen şehir</span><b>'+s.city+'</b></div><div class="row"><span>Küçük üretimhane + 1 tank</span><b>'+fmt(city(s.city).fee)+' ₺</b></div><div class="row"><span>İnşaat sonrası bakiye</span><b>'+fmt(s.cash-city(s.city).fee)+' ₺</b></div>';return}
-$("location").textContent=s.city;$("capacity").textContent=capacity()+" kg";$("grapestock").textContent=Object.values(s.grapes).reduce((a,b)=>a+b,0)+" kg";$("factory").innerHTML='<div class="row"><span>🏭 Üretimhane</span><b>'+s.city+'</b></div><div class="row"><span>Çelik tank</span><b>'+s.tanks+' adet</b></div><div class="row"><span>Toplam tank kapasitesi</span><b>'+capacity()+' kg</b></div><div class="row"><span>Üretimde</span><b>'+active()+' kg</b></div><div class="row"><span>Bir sonraki tank</span><b>'+fmt(5000*s.tanks)+' ₺</b></div><button class="btn full" onclick="buyTank()" '+(level()<s.tanks*2||s.cash<5000*s.tanks?"disabled":"")+'>+ Tank satın al '+(level()<s.tanks*2?"· Seviye "+(s.tanks*2)+" gerekli":"")+'</button><div class="hint" style="margin-top:12px">Her tank 20 kg eşzamanlı üretim kapasitesi ekler. İkinci tank seviye 2, üçüncü tank seviye 4 düzeyinde açılır. Başlangıç ekipmanı dahildir.</div>';$("logs").innerHTML=s.logs.map(x=>'<div class="row small">'+x+'</div>').join("");$("orderBadge").textContent=s.unread?"🔴 "+s.unread:"";$("dockBadge").textContent=s.unread?Math.min(99,s.unread):"";$("dockBadge").classList.toggle("hidden",!s.unread);for(const v of ["market","produce","sales","vineyard"])$("tab-"+v).classList.toggle("active",s.view===v);if(s.view==="market")showMarket();if(s.view==="produce"&&!document.activeElement?.matches?.("input,select"))showProduction();if(s.view==="sales")showSales();if(s.view==="vineyard")showVineyard();if(s.view==="factory")showFactory();if(s.view==="finance")showFinance();if(s.view==="settings")showSettings();
+$("location").textContent=s.city;$("capacity").textContent=capacity()+" kg";$("grapestock").textContent=Object.values(s.grapes).reduce((a,b)=>a+b,0)+" kg";$("factory").innerHTML='<div class="row"><span>🏭 Üretimhane</span><b>'+s.city+'</b></div><div class="row"><span>Çelik tank</span><b>'+s.tanks+' adet</b></div><div class="row"><span>Toplam tank kapasitesi</span><b>'+capacity()+' kg</b></div><div class="row"><span>Üretimde</span><b>'+active()+' kg</b></div><div class="row"><span>Bir sonraki tank</span><b>'+fmt(5000*s.tanks)+' ₺</b></div><button class="btn full" onclick="buyTank()" '+(level()<s.tanks*2||s.cash<5000*s.tanks?"disabled":"")+'>+ Tank satın al '+(level()<s.tanks*2?"· Seviye "+(s.tanks*2)+" gerekli":"")+'</button><div class="hint" style="margin-top:12px">Her tank maksimum 20 kg üzüm alır ve tek seferde bir parti üretir. İkinci tank seviye 2, üçüncü tank seviye 4 düzeyinde açılır. Başlangıç ekipmanı dahildir.</div>';$("logs").innerHTML=s.logs.map(x=>'<div class="row small">'+x+'</div>').join("");$("orderBadge").textContent=s.unread?"🔴 "+s.unread:"";$("dockBadge").textContent=s.unread?Math.min(99,s.unread):"";$("dockBadge").classList.toggle("hidden",!s.unread);for(const v of ["market","produce","sales","vineyard"])$("tab-"+v).classList.toggle("active",s.view===v);if(s.view==="market")showMarket();if(s.view==="produce"&&!document.activeElement?.matches?.("input,select"))showProduction();if(s.view==="sales")showSales();if(s.view==="vineyard")showVineyard();if(s.view==="factory")showFactory();if(s.view==="finance")showFinance();if(s.view==="settings")showSettings();
 }
 function selectCity(n){if(s.built)return;s.city=n;save()}
 function cleanName(t){return String(t||"").replace(/[<>]/g,"").trim().slice(0,35)}
@@ -243,9 +244,30 @@ function showMarket(){
 }
 function buyGrape(id,kg){let g=grape(id),q=quote(g,kg);if(!s.built||level()<g.level||s.cash<q.total)return toast("Satın alma yapılamıyor.");s.cash-=q.total;s.grapes[id]=(s.grapes[id]||0)+kg;s.xp+=4;log(g.name+" "+kg+" kg alındı, nakliye "+fmt(q.freight)+" ₺.");save();toast(g.origin+" → "+s.city+": +"+kg+" kg üzüm")}
 
+
+const TANK_KG=20;
+function tankAssignments(){
+ const assignments=Array.from({length:Math.max(0,Math.floor(s.tanks))},()=>null);
+ const overflow=[];
+ for(const job of s.jobs){
+  let index=Number.isInteger(job.tank)&&job.tank>=0&&job.tank<assignments.length&&assignments[job.tank]===null?job.tank:assignments.findIndex(v=>v===null);
+  if(index===-1)overflow.push(job);
+  else assignments[index]=job;
+ }
+ return {assignments,overflow};
+}
+function nextEmptyTank(){return tankAssignments().assignments.findIndex(job=>job===null)}
+function tankStatusHtml(){
+ const {assignments,overflow}=tankAssignments();
+ return '<div class="tank-list">'+assignments.map((job,i)=>'<div class="tank-unit"><span>🛢️ Tank '+(i+1)+'</span><div class="tank-meter"><span style="width:'+Math.min(100,100*(job?.kg||0)/TANK_KG)+'%"></span></div><b>'+(job?(job.kg>20?'Eski parti · ':'')+job.kg+' / 20 kg':'Boş · 0 / 20 kg')+'</b></div>').join("")+
+ (overflow.length?'<p class="small muted">Önceki sürümden kalan '+overflow.length+' üretim partisi mevcut. Bitince yeni tank düzeni uygulanacak.</p>':'')+
+ '</div>';
+}
+
 function recipeSlots(){return level()>=5?1+Math.floor((level()-5)/3):0}
 function showProduction(){
  const monosepaj=GRAPES.filter(g=>(s.grapes[g.id]||0)>=10);
+ const emptyTanks=tankAssignments().assignments.filter(j=>j===null).length;
  const recipes=[...BLENDS,...s.customBlends];
  const options=GRAPES.filter(g=>g.level<=level()).map(g=>'<option value="'+g.id+'">'+g.name+'</option>').join("");
  const blendForm=level()<5?'<div class="hint">🔒 Kendi kupajını tasarlama özelliği seviye 5 düzeyinde açılır.</div>':
@@ -255,11 +277,11 @@ function showProduction(){
  '<label class="input-label">Kupaj oranı (20 kg)</label><select id="blendRatio"><option value="10">50 / 50</option><option value="12">60 / 40</option><option value="14">70 / 30</option></select>'+
  (level()>=9?'<label class="input-label"><input id="blendTriple" type="checkbox" onchange="toggleTriple()"> Üç üzüm kullan (50 / 30 / 20)</label><select id="blendThird" class="hidden" aria-label="Üçüncü üzüm">'+options+'</select>':'')+
  '<button class="btn primary full" style="margin-top:15px" onclick="createBlend()">Özel kupajı kaydet</button></div>');
- $("content").innerHTML='<h2>Üretim</h2><p class="muted small">Üretim tankında 10 kg üzümden 7 şişelik ürün hazırlanır. Tank kapasitesi üretimhanenin büyüklüğüne göre artar.</p><div class="row"><span>Boş tank kapasitesi</span><b>'+Math.max(0,capacity()-active())+' kg</b></div>'+
+ $("content").innerHTML='<h2>Üretim</h2><p class="muted small">Her tank <b>en fazla 20 kg üzüm</b> alır. Bir tank aynı anda yalnızca bir üretim partisi işleyebilir. İkinci üretim için yeni tank satın alabilirsin.</p><div class="row"><span>Tank başına kapasite</span><b>20 kg</b></div><div class="row"><span>Boş tank</span><b>'+emptyTanks+' / '+s.tanks+'</b></div><div class="row"><span>Toplam tank kapasitesi</span><b>'+capacity()+' kg</b></div>'+tankStatusHtml()+
  '<h3 style="margin-top:20px">Monosepaj</h3>'+
- (monosepaj.length?monosepaj.map(g=>'<div class="item"><div><h3>🍷 '+g.name+'</h3><div class="muted small">Depoda '+s.grapes[g.id]+' kg · 10 kg → 7 şişe</div></div><button class="btn primary" '+(active()+10>capacity()?'disabled':'')+' onclick="produce(\''+g.id+'\')">Üret</button></div>').join(""):'<div class="hint">Üretim için üzüm pazarından malzeme al.</div>')+
+ (monosepaj.length?monosepaj.map(g=>'<div class="item"><div><h3>🍷 '+g.name+'</h3><div class="muted small">Depoda '+s.grapes[g.id]+' kg · 10 kg → 7 şişe</div></div><div class="tank-actions"><button class="btn" '+(emptyTanks===0?'disabled':'')+' onclick="produce(\''+g.id+'\',10)">10 kg üret</button><button class="btn primary" '+(emptyTanks===0||s.grapes[g.id]<20?'disabled':'')+' onclick="produce(\''+g.id+'\',20)">20 kg üret</button></div></div>').join(""):'<div class="hint">Üretim için üzüm pazarından malzeme al.</div>')+
  '<h3 style="margin-top:24px">Kupaj Reçeteleri</h3><p class="muted small">Her kupaj partisi 20 kg üzüm kullanır ve 14 şişe verir.</p>'+
- recipes.map(b=>'<div class="item"><div><h3>🍷 '+escapeHtml(b.name)+'</h3><div class="muted small">'+Object.entries(b.needs).map(([id,kg])=>grape(id)?.name+' '+kg+' kg (stok '+(s.grapes[id]||0)+')').join(' + ')+'</div></div><button class="btn primary" '+(level()<b.level||active()+20>capacity()?'disabled':'')+' onclick="produceBlend(\''+b.id+'\')">'+(level()<b.level?'Seviye '+b.level:'Üret')+'</button></div>').join("")+
+ recipes.map(b=>'<div class="item"><div><h3>🍷 '+escapeHtml(b.name)+'</h3><div class="muted small">'+Object.entries(b.needs).map(([id,kg])=>grape(id)?.name+' '+kg+' kg (stok '+(s.grapes[id]||0)+')').join(' + ')+'</div></div><button class="btn primary" '+(level()<b.level||emptyTanks===0?'disabled':'')+' onclick="produceBlend(\''+b.id+'\')">'+(level()<b.level?'Seviye '+b.level:'Üret')+'</button></div>').join("")+
  '<h3 style="margin-top:25px">✒️ Kendi Kupajımı Oluştur</h3>'+blendForm+
  '<h3 style="margin-top:25px">Devam Eden Üretimler</h3>'+(s.jobs.length?s.jobs.map(j=>'<div class="row"><span>'+escapeHtml(WINE(j.id)?.name||"Şarap")+' · '+j.kg+' kg</span><b class="timer">'+Math.max(0,j.finish-gameHour())+' saat</b></div>').join(""):'<p class="muted small">Aktif üretim yok.</p>')+
  '<h3 style="margin-top:22px">Şarap Stoğu</h3>'+
@@ -283,19 +305,29 @@ function createBlend(){
  s.xp+=10;log("Özel kupaj reçetesi oluşturuldu: "+name+".");save();toast("🍷 "+name+" artık üretilebilir.");
 }
 
-function produce(id){if((s.grapes[id]||0)<10||active()+10>capacity())return toast("Üzüm veya tank kapasitesi yetersiz.");s.grapes[id]-=10;s.jobs.push({id,kg:10,finish:s.day*24+s.hour+Math.max(14,Math.round(24*(1-(oenologistProfile()?.ferment||0))))});s.xp+=7;log(grape(id).name+" üretimi başladı.");save();toast("Üretim başladı. 24 oyun saati sürecek.")}
+function produce(id,kg=10){
+ const g=grape(id),tank=nextEmptyTank();
+ if(!g||![10,20].includes(kg)||tank<0||(s.grapes[id]||0)<kg)return toast("Yeterli üzüm veya boş tank bulunmuyor.");
+ s.grapes[id]-=kg;
+ const hours=Math.max(14,Math.round(24*(1-(oenologistProfile()?.ferment||0))));
+ s.jobs.push({id,kg,tank,finish:gameHour()+hours});
+ s.xp+=7;
+ log("Tank "+(tank+1)+": "+g.name+" "+kg+" kg üretime alındı.");save();
+ toast("🛢️ Tank "+(tank+1)+" üretime başladı.");
+}
+
 const BLENDS=[{id:"okuz-bogaz",name:"Anadolu Kupajı",needs:{okuz:10,bogaz:10},level:2,price:155},{id:"okuz-kalecik",name:"Orta Anadolu Kupajı",needs:{okuz:10,kalecik:10},level:3,price:165},{id:"cal-okuz",name:"Ege Kırmızı Kupajı",needs:{cal:10,okuz:10},level:3,price:145}];
 
 const WINE=id=>s.customBlends.find(b=>b.id===id)||BLENDS.find(b=>b.id===id)||grape(id);
 function produceBlend(id){
- const b=WINE(id);
- if(!b?.needs||level()<b.level||active()+20>capacity())return toast("Seviye veya tank kapasitesi yetersiz.");
+ const b=WINE(id),tank=nextEmptyTank();
+ if(!b?.needs||level()<b.level||tank<0)return toast("Seviye veya boş tank bulunmuyor.");
  if(Object.entries(b.needs).some(([g,q])=>(s.grapes[g]||0)<q))return toast("Kupaj için yeterli üzüm yok.");
  for(const [g,q] of Object.entries(b.needs))s.grapes[g]-=q;
- s.jobs.push({id,kg:20,finish:gameHour()+Math.max(20,Math.round(36*(1-(oenologistProfile()?.ferment||0))))});
- s.xp+=9;log(b.name+" üretimine başlandı.");save();toast("Kupaj üretimine başlandı.");
+ s.jobs.push({id,kg:20,tank,finish:gameHour()+Math.max(20,Math.round(36*(1-(oenologistProfile()?.ferment||0))))});
+ s.xp+=9;log("Tank "+(tank+1)+": "+b.name+" kupajı üretime alındı.");save();
+ toast("🛢️ Tank "+(tank+1)+" kupaj üretimine başladı.");
 }
-
 
 const LAND_COST=18000;const DAYS_TO_HARVEST=30;
 function buyLand(){
