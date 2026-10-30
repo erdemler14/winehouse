@@ -78,7 +78,15 @@ function km(a,b){const r=Math.PI/180,lat=(b.lat-a.lat)*r,lon=(b.lon-a.lon)*r,t=M
 function transport(g,kg){return Math.round((60+km(city(g.origin),city(s.city))*0.22)*kg/10)}
 function quote(g,kg){return {goods:g.price*kg,freight:transport(g,kg),total:g.price*kg+transport(g,kg),km:km(city(g.origin),city(s.city))}}
 function log(t){s.logs.unshift("Gün "+s.day+": "+t);s.logs=s.logs.slice(0,7)}
-function save(){s.updated=Date.now();localStorage.setItem("winehouse-turkiye-v1",JSON.stringify(s));render()}
+function save(){
+ const old=s.lastLevelNotified??level(),current=level();
+ if(current>old){
+  const unlocked=GRAPES.filter(g=>g.level>old&&g.level<=current).map(g=>g.name);
+  log("⭐ Seviye "+current+"! "+(unlocked.length?"Yeni üzüm açıldı: "+unlocked.join(", "):"Yeni seviyeye ulaştın."));
+  s.lastLevelNotified=current;
+ }
+ s.updated=Date.now();localStorage.setItem("winehouse-turkiye-v1",JSON.stringify(s));render()
+}
 function toast(t){$("toast").textContent=t;$("toast").classList.add("show");clearTimeout(window.to);window.to=setTimeout(()=>$("toast").classList.remove("show"),2800)}
 function render(){ $("money").textContent=fmt(s.cash);$("level").textContent=level();$("clock").textContent=s.day+". Gün, "+String(s.hour).padStart(2,"0")+":00";$("pause").textContent=s.paused?"▶":"⏸";$("setup").classList.toggle("hidden",s.built);$("game").classList.toggle("hidden",!s.built);$("stage").textContent=s.built?s.city+" · Seviye "+level():"Kurulum aşaması";$("headline").textContent=s.built?(s.wineryName||"Şaraphanem"):"Kendi şaraphaneni kur.";$("subtitle").textContent=s.built?"Üzümünü seç, üretimini yönet, siparişlere yetiş.":"Türkiye'de üretim yapacağın şehri seçerek başla.";
 if(!s.built){$("map").innerHTML=CITIES.map(c=>'<button class="pin '+(c.n===s.city?"on":"")+'" style="left:'+c.x+'%;top:'+c.y+'%" onclick="selectCity(\''+c.n+'\')">'+c.n+'</button>').join("");$("cities").innerHTML=CITIES.map(c=>'<button class="city '+(c.n===s.city?"active":"")+'" onclick="selectCity(\''+c.n+'\')"><b>'+c.n+'</b><small>Kurulum '+fmt(c.fee)+' ₺</small></button>').join("");$("estimate").innerHTML='<div class="row"><span>Seçilen şehir</span><b>'+s.city+'</b></div><div class="row"><span>Küçük üretimhane + 1 tank</span><b>'+fmt(city(s.city).fee)+' ₺</b></div><div class="row"><span>İnşaat sonrası bakiye</span><b>'+fmt(s.cash-city(s.city).fee)+' ₺</b></div>';return}
@@ -305,6 +313,7 @@ function hour(){
 }
 function pauseGame(){s.paused=!s.paused;s.updated=Date.now();save()}
 function tick(){let n=Date.now();if(s.paused){s.updated=n;return}let passed=Math.floor((n-s.updated)/5000);if(passed<=0)return;for(let i=0;i<Math.min(24,passed);i++)hour();s.updated=n-(passed<24?(n-s.updated)%5000:0);save()}
+s.lastLevelNotified??=level();
 tick();render();
 if(!s.built){$("panelHeading").textContent="Şehrini seç";$("modalOverlay").classList.add("open");$("modalOverlay").setAttribute("aria-hidden","false");}
 setInterval(tick,1000);
