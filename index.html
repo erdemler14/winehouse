@@ -223,12 +223,12 @@ function makeOrder(){
  if(!s.built||s.orders.length>=4)return;
  const types=[...GRAPES,...BLENDS,...s.customBlends].filter(g=>g.level<=level());
  const g=types[(s.day+s.orders.length+s.id)%types.length];
- const qty=7*(1+s.id%3),price=Math.round(qty*((g.price||115)*2.1));
+ const aged=s.barrels>0&&((s.id+1)%5===0);const qty=aged?7*(1+s.id%2):7*(1+s.id%3),price=Math.round(qty*((g.price||115)*2.1));
  const name=CUSTOMERS[s.id%CUSTOMERS.length];
  const id=++s.id;
- s.orders.push({id,name,grape:g.id,qty,price,deadline:gameHour()+96});
+ s.orders.push({id,name,grape:g.id,qty,price,aged,deadline:gameHour()+(aged?24*21:96)});
  if(!($("modalOverlay").classList.contains("open")&&s.view==="sales")){s.unreadIds.push(id);s.unread=s.unreadIds.length;toast("🔔 "+name+" yeni sipariş gönderdi!")}
- log(name+" "+qty+" şişe "+g.name+" istedi.");
+ log(name+" "+qty+" şişe "+g.name+(aged?" (meşe olgunlaştırmalı)":"")+" istedi.");
 }
 function refreshExpiredOrders(){
  if(!s.built||!s.orders.length)return;
@@ -243,8 +243,34 @@ function refreshExpiredOrders(){
  for(let i=0;i<expired.length;i++)makeOrder();
  if(expired.length)toast("⏰ "+expired.length+" siparişin süresi doldu; liste güncellendi.");
 }
-function showSales(){$("content").innerHTML='<h2>Gelen Siparişler</h2><p class="muted small">Restoran, otel ve yerel işletmelerden gelen siparişleri karşıla. Üretim planını stoklara göre yap.</p>'+(s.orders.length?s.orders.map(o=>'<div class="item"><div><h3>🍽️ '+o.name+'</h3><div class="muted small">'+o.qty+' şişe '+WINE(o.grape).name+' · Depoda '+(s.wine[o.grape]||0)+' şişe</div><div class="muted small">Kalan '+Math.max(0,o.deadline-(s.day*24+s.hour))+' oyun saati</div><div class="cost" style="margin-top:7px">'+fmt(o.price)+' ₺</div></div><button class="btn primary" '+((s.wine[o.grape]||0)<o.qty?"disabled":"")+' onclick="deliver('+o.id+')">Teslim et</button></div>').join(""):'<div class="hint">Yeni müşteri siparişleri oyun günü ilerledikçe gelir.</div>')}
-function deliver(id){refreshExpiredOrders();let o=s.orders.find(o=>o.id===id);if(!o)return save(),toast("Bu siparişin süresi doldu. Liste yenilendi.");if((s.wine[o.grape]||0)<o.qty)return toast("Şişe stoğu yetersiz.");s.wine[o.grape]-=o.qty;s.cash+=o.price;s.xp+=25;s.orders=s.orders.filter(x=>x.id!==id);s.unreadIds=s.unreadIds.filter(x=>x!==id);s.unread=s.unreadIds.length;log(o.name+" siparişi teslim edildi: "+fmt(o.price)+" ₺.");save();toast("Sipariş teslim edildi!")}
+
+function payoutFor(o){
+ if(!o.aged)return o.price;
+ const stock=s.agedWine[o.grape]||0;
+ const quality=stock?((s.agedValue[o.grape]||stock*1.1)/stock):1.1;
+ return Math.round(o.price*Math.max(1,Math.min(1.55,quality)));
+}
+function showSales(){
+ $("content").innerHTML='<h2>Gelen Siparişler</h2><p class="muted small">Restoranlar ve otellerden gelen talepleri zamanında teslim et. Meşe olgunlaştırması isteyen müşteriler daha yüksek bedel öder.</p>'+
+ (s.orders.length?s.orders.map(o=>'<div class="item"><div><h3>🍽️ '+escapeHtml(o.name)+'</h3><div class="muted small">'+o.qty+' şişe '+escapeHtml(WINE(o.grape)?.name||"Şarap")+(o.aged?' · 🪵 Meşede olgunlaştırılmış':'')+'</div><div class="muted small">Depoda '+(o.aged?(s.agedWine[o.grape]||0):(s.wine[o.grape]||0))+' şişe · Kalan '+Math.max(0,o.deadline-gameHour())+' saat</div><div class="cost" style="margin-top:7px">'+fmt(payoutFor(o))+' ₺'+(o.aged?'<small class="muted"> (fıçı kalite primi dahil)</small>':'')+'</div></div><button class="btn primary" '+((o.aged?(s.agedWine[o.grape]||0):(s.wine[o.grape]||0))<o.qty?'disabled':'')+' onclick="deliver('+o.id+')">Teslim et</button></div>').join(""):'<div class="hint">Yeni müşteri siparişleri oyun günü ilerledikçe gelir.</div>');
+}
+function deliver(id){
+ refreshExpiredOrders();
+ const o=s.orders.find(o=>o.id===id);
+ if(!o){save();return toast("Bu siparişin süresi doldu. Liste yenilendi.")}
+ const stock=o.aged?s.agedWine:s.wine;
+ if((stock[o.grape]||0)<o.qty)return toast("Şarap stoğu yetersiz.");
+ const payment=payoutFor(o);
+ if(o.aged){
+  const quality=(s.agedValue[o.grape]||stock[o.grape]*1.1)/stock[o.grape];
+  s.agedValue[o.grape]=Math.max(0,(s.agedValue[o.grape]||stock[o.grape]*1.1)-o.qty*quality);
+ }
+ stock[o.grape]-=o.qty;s.cash+=payment;s.xp+=25;
+ s.orders=s.orders.filter(x=>x.id!==id);
+ s.unreadIds=s.unreadIds.filter(x=>x!==id);s.unread=s.unreadIds.length;
+ log(o.name+" siparişi teslim edildi: "+fmt(payment)+" ₺.");
+ save();toast("Sipariş teslim edildi!");
+}
 function hour(){
  s.hour++;
  if(s.hour===24){
