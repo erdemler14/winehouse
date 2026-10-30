@@ -193,7 +193,7 @@ function beginAging(id){
  const g=WINE(id),qty=Number($("oakQty-"+id)?.value),days=Number($("oakDays-"+id)?.value);
  if(!g||![7,14].includes(qty)||![7,14,28].includes(days)||(s.wine[id]||0)<qty)return toast("Olgunlaştırma için yeterli şarap yok.");
  s.wine[id]-=qty;
- s.agingJobs.push({id,qty,days,finish:gameHour()+days*24,premium:oakFactor(g,days)});
+ s.agingJobs.push({id,qty,days,finish:gameHour()+days*24,premium:Math.min(1.85,oakFactor(g,days)*(1+(oenologistProfile()?.oak||0)))});
  log(g.name+": "+qty+" şişe eşdeğeri şarap "+days+" günlük meşe olgunlaştırmasına alındı.");
  save();toast("🪵 "+days+" günlük olgunlaştırma başladı.");
 }
@@ -214,13 +214,13 @@ function showFactory(){
  const next=GRAPES.find(g=>g.level>level());
  const required=next?Math.round(220*Math.pow(level(),1.4)):s.xp;
  $("content").innerHTML='<label class="input-label" for="renameWinery">Şaraphanemin adı</label><div class="name-row"><input id="renameWinery" class="name-input" maxlength="35" value="'+escapeHtml(s.wineryName||"Şaraphanem")+'"><button class="btn primary" onclick="setWineryName()">Kaydet</button></div><div class="hint" style="margin:14px 0">⭐ Seviye '+level()+' · '+s.xp+' TP · Sonraki seviyeye '+Math.max(0,required-s.xp)+' TP. '+(next?'Sıradaki üzüm: '+next.name+' (Seviye '+next.level+')':'Tüm üzüm çeşitleri açık')+'</div>'+
- '<div class="wine-chips"><div><small>Konum</small><strong>'+s.city+'</strong></div><div><small>Tank</small><strong>'+s.tanks+' adet</strong></div><div><small>Kapasite</small><strong>'+capacity()+' kg</strong></div></div><div style="margin-top:20px">'+$("factory").innerHTML+'</div><h3 style="margin-top:22px">İşletme Günlüğü</h3>'+$("logs").innerHTML+oakPanel();
+ '<div class="wine-chips"><div><small>Konum</small><strong>'+s.city+'</strong></div><div><small>Tank</small><strong>'+s.tanks+' adet</strong></div><div><small>Kapasite</small><strong>'+capacity()+' kg</strong></div></div><div style="margin-top:20px">'+$("factory").innerHTML+'</div><h3 style="margin-top:22px">İşletme Günlüğü</h3>'+$("logs").innerHTML+oakPanel()+oenologistPanel();
 }
 function showFinance(){
  const qty=Object.values(s.grapes).reduce((a,b)=>a+b,0);
  const stock=GRAPES.reduce((a,g)=>a+(s.grapes[g.id]||0)*g.price,0);
- const daily=85*s.tanks+18*s.barrels;
- $("content").innerHTML='<p class="muted small">İşletme maliyetlerini ve nakit durumunu buradan takip edebilirsin.</p><div class="wine-chips"><div><small>Nakit</small><strong>'+fmt(s.cash)+' ₺</strong></div><div><small>Günlük sabit gider</small><strong>'+fmt(daily)+' ₺</strong></div><div><small>Üzüm stok değeri</small><strong>'+fmt(stock)+' ₺</strong></div></div><div class="scene-finance"><div class="row"><span>Depodaki üzüm</span><b>'+qty+' kg</b></div><div class="row"><span>Toplam tank yatırımı</span><b>'+s.tanks+' tank</b></div><div class="row"><span>Aktif üretim</span><b>'+s.jobs.length+' parti</b></div><div class="row"><span>Aktif sipariş</span><b>'+s.orders.length+' adet</b></div><div class="row"><span>Bağ arazisi</span><b>'+s.land.length+' adet</b></div></div><p class="hint">Nakliye ve üzüm maliyetleri oyun ekonomisi için temsili olarak belirlenmiştir.</p>';
+ const costs=payroll();const base=85*s.tanks+18*s.barrels;const daily=base+costs.total;
+ $("content").innerHTML='<p class="muted small">İşletme maliyetlerini ve nakit durumunu buradan takip edebilirsin.</p><div class="wine-chips"><div><small>Nakit</small><strong>'+fmt(s.cash)+' ₺</strong></div><div><small>Günlük sabit gider</small><strong>'+fmt(daily)+' ₺</strong></div><div><small>Üzüm stok değeri</small><strong>'+fmt(stock)+' ₺</strong></div></div><div class="scene-finance"><div class="row"><span>Depodaki üzüm</span><b>'+qty+' kg</b></div><div class="row"><span>Toplam tank yatırımı</span><b>'+s.tanks+' tank</b></div><div class="row"><span>Aktif üretim</span><b>'+s.jobs.length+' parti</b></div><div class="row"><span>Aktif sipariş</span><b>'+s.orders.length+' adet</b></div><div class="row"><span>Bağ arazisi</span><b>'+s.land.length+' adet</b></div><div class="row"><span>Temel gider + fıçı bakımı</span><b>'+fmt(base)+' ₺/gün</b></div><div class="row"><span>Bağ işçilerinin yevmiyesi</span><b>'+fmt(costs.vineyards)+' ₺/gün</b></div><div class="row"><span>Önolog maaşı</span><b>'+fmt(costs.oeno)+' ₺/gün</b></div><div class="row"><span>Toplam personel gideri</span><b>'+fmt(costs.total)+' ₺/gün</b></div><div class="row"><span>Bugüne kadar personel ödemesi</span><b>'+fmt(s.payrollSpent)+' ₺</b></div></div><p class="hint">Nakliye ve üzüm maliyetleri oyun ekonomisi için temsili olarak belirlenmiştir.</p>';
 }
 function showSettings(){
  $("content").innerHTML='<p class="muted small">Oyun zamanı gerçek hayatta her 5 saniyede 1 saat ilerler. Oyun kayıtları bu tarayıcıda saklanır.</p><div class="row"><span>Oyun zamanı</span><b>'+s.day+'. Gün · '+String(s.hour).padStart(2,"0")+':00</b></div><div class="row"><span>Zaman</span><button class="btn" onclick="pauseGame()">'+(s.paused?'▶ Devam Et':'⏸ Duraklat')+'</button></div><div class="row"><span>Yeni oyun</span><button class="btn" onclick="restartGame()">Oyunu Sıfırla</button></div>';
@@ -281,7 +281,7 @@ function createBlend(){
  s.xp+=10;log("Özel kupaj reçetesi oluşturuldu: "+name+".");save();toast("🍷 "+name+" artık üretilebilir.");
 }
 
-function produce(id){if((s.grapes[id]||0)<10||active()+10>capacity())return toast("Üzüm veya tank kapasitesi yetersiz.");s.grapes[id]-=10;s.jobs.push({id,kg:10,finish:s.day*24+s.hour+24});s.xp+=7;log(grape(id).name+" üretimi başladı.");save();toast("Üretim başladı. 24 oyun saati sürecek.")}
+function produce(id){if((s.grapes[id]||0)<10||active()+10>capacity())return toast("Üzüm veya tank kapasitesi yetersiz.");s.grapes[id]-=10;s.jobs.push({id,kg:10,finish:s.day*24+s.hour+Math.max(14,Math.round(24*(1-(oenologistProfile()?.ferment||0))))});s.xp+=7;log(grape(id).name+" üretimi başladı.");save();toast("Üretim başladı. 24 oyun saati sürecek.")}
 const BLENDS=[{id:"okuz-bogaz",name:"Anadolu Kupajı",needs:{okuz:10,bogaz:10},level:2,price:155},{id:"okuz-kalecik",name:"Orta Anadolu Kupajı",needs:{okuz:10,kalecik:10},level:3,price:165},{id:"cal-okuz",name:"Ege Kırmızı Kupajı",needs:{cal:10,okuz:10},level:3,price:145}];
 
 const WINE=id=>s.customBlends.find(b=>b.id===id)||BLENDS.find(b=>b.id===id)||grape(id);
@@ -290,7 +290,7 @@ function produceBlend(id){
  if(!b?.needs||level()<b.level||active()+20>capacity())return toast("Seviye veya tank kapasitesi yetersiz.");
  if(Object.entries(b.needs).some(([g,q])=>(s.grapes[g]||0)<q))return toast("Kupaj için yeterli üzüm yok.");
  for(const [g,q] of Object.entries(b.needs))s.grapes[g]-=q;
- s.jobs.push({id,kg:20,finish:gameHour()+36});
+ s.jobs.push({id,kg:20,finish:gameHour()+Math.max(20,Math.round(36*(1-(oenologistProfile()?.ferment||0))))});
  s.xp+=9;log(b.name+" üretimine başlandı.");save();toast("Kupaj üretimine başlandı.");
 }
 
@@ -381,10 +381,11 @@ function refreshExpiredOrders(){
 }
 
 function payoutFor(o){
- if(!o.aged)return o.price;
+ const blendBonus=WINE(o.grape)?.needs?(oenologistProfile()?.blend||0):0;
+ if(!o.aged)return Math.round(o.price*(1+blendBonus));
  const stock=s.agedWine[o.grape]||0;
  const quality=stock?((s.agedValue[o.grape]||stock*1.1)/stock):1.1;
- return Math.round(o.price*Math.max(1,Math.min(1.55,quality)));
+ return Math.round(o.price*Math.max(1,Math.min(1.85,quality))*(1+blendBonus));
 }
 function showSales(){
  $("content").innerHTML='<h2>Gelen Siparişler</h2><p class="muted small">Restoranlar ve otellerden gelen talepleri zamanında teslim et. Meşe olgunlaştırması isteyen müşteriler daha yüksek bedel öder.</p>'+
@@ -411,7 +412,18 @@ function hour(){
  s.hour++;
  if(s.hour===24){
   s.hour=0;s.day++;
-  if(s.built)s.cash-=85*s.tanks+18*s.barrels;
+  if(s.built){
+   const labor=payroll();
+   const expenses=85*s.tanks+18*s.barrels+labor.total;
+   s.cash-=expenses;s.lastPayroll=labor.total;s.payrollSpent+=labor.total;
+   if(labor.total)log("Personel ödemeleri: bağ işçileri "+fmt(labor.vineyards)+" ₺, önolog "+fmt(labor.oeno)+" ₺.");
+   if(s.cash<0)log("⚠️ Bakiye eksiye düştü; personel ve işletme maliyetlerini gözden geçir.");
+   for(const p of s.land){
+    if(!p.grape)continue;
+    if(p.workProgress<30&&plotLaborSpeed(p)>0)p.workProgress=Math.min(30,p.workProgress+plotLaborSpeed(p));
+    updateHarvestEstimate(p);
+   }
+  }
  }
  const now=gameHour();
  const done=s.jobs.filter(j=>j.finish<=now);
