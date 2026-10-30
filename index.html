@@ -49,6 +49,7 @@ html,body{height:100%;overflow:hidden}body{background:#c7d8be;color:#26362f}
 .order-overview{margin:14px 0 20px}.order-overview strong{font-size:16px}.order-overview small{font-size:11px}@media(max-width:520px){.order-overview{grid-template-columns:repeat(3,1fr)}.order-overview>div{padding:9px 7px}.order-overview strong{font-size:13px}}
  .tank-list{display:grid;gap:8px;margin:13px 0 20px}.tank-unit{display:grid;grid-template-columns:105px 1fr 135px;align-items:center;gap:10px;background:#fff;border:1px solid #e7e7e5;border-radius:12px;padding:12px;font-size:13px}.tank-unit b{font-size:12px;text-align:right}.tank-meter{height:9px;border-radius:20px;background:#e9ebe7;overflow:hidden}.tank-meter span{display:block;height:100%;background:#75956d;border-radius:20px}.tank-actions{display:flex;flex-direction:column;gap:7px}.tank-actions .btn{white-space:nowrap;padding:8px 10px}@media(max-width:580px){.tank-unit{grid-template-columns:85px 1fr 105px;gap:6px;padding:9px;font-size:11px}.tank-unit b{font-size:11px}.tank-actions{flex-direction:row}}
 .market-offers{display:grid;gap:14px;margin:16px 0}.offer-grape{border:1px solid #e4e6e0;border-radius:16px;background:#fffdfa;padding:16px}.offer-heading{display:flex;justify-content:space-between;gap:16px;align-items:center;border-bottom:1px solid #ebebe4;padding-bottom:10px;margin-bottom:8px}.offer-heading h3{margin:0 0 6px}.offer-row{padding:11px 0;border-bottom:1px solid #edeee9;display:flex;align-items:center;justify-content:space-between;gap:10px}.offer-row:last-child{border:0;padding-bottom:0}.offer-info{min-width:0;flex:1}.offer-info>b{font-size:13px}.offer-deal{display:inline-block;margin-left:7px;padding:2px 6px;background:#e2eedb;color:#40623c;border-radius:7px;font-size:10px;font-weight:700}.offer-actions{text-align:right;white-space:nowrap}.offer-actions strong{display:block;color:#66314a;margin-bottom:6px}.offer-actions strong small{color:#777;font-weight:normal;font-size:11px}.offer-actions .btn{padding:7px 9px;font-size:12px;margin-left:4px}.offer-grape>.hint{margin-top:12px}@media(max-width:600px){.offer-row{align-items:flex-start;flex-direction:column}.offer-actions{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left}.offer-actions strong{margin-bottom:0}.offer-heading{align-items:flex-start}}
+.tasting-hero{display:flex;gap:15px;align-items:center;background:#e5efdf;border:1px solid #d9e5d5;border-radius:16px;padding:18px;margin:14px 0}.tasting-hero h3{margin:0 0 6px}.tasting-home{width:75px;height:75px;background:#f9f3de;border-radius:17px;display:grid;place-items:center;font-size:44px}#content .seg{display:flex;gap:6px;flex-wrap:wrap}#content .seg button{flex:1;min-width:112px}@media(max-width:500px){#content .seg button{font-size:12px;padding:8px 3px}}
 </style></head><body>
 <div class="world" aria-label="Pastel bağlar, Türkiye köyleri ve şaraphane illüstrasyonu"></div>
 <header class="topbar"><div class="brand">🍇 Winehouse</div><div class="fill"></div><span class="topinfo"><b id="money">35.000</b> ₺</span><span class="topdivider"></span><span class="topinfo">★ <b id="level">1</b>. Seviye</span><span class="topdivider"></span><span class="topinfo">☀ <b id="clock">1. Gün, 08:00</b></span><button class="btn small clockpause" aria-label="Zamanı durdur veya devam ettir" id="pause" onclick="pauseGame()">⏸</button></header>
@@ -223,8 +224,8 @@ function showFactory(){
 function showFinance(){
  const qty=Object.values(s.grapes).reduce((a,b)=>a+b,0);
  const stock=GRAPES.reduce((a,g)=>a+(s.grapes[g.id]||0)*g.price,0);
- const costs=payroll();const base=85*s.tanks+18*s.barrels;const daily=base+costs.total;
- $("content").innerHTML='<p class="muted small">İşletme maliyetlerini ve nakit durumunu buradan takip edebilirsin.</p><div class="wine-chips"><div><small>Nakit</small><strong>'+fmt(s.cash)+' ₺</strong></div><div><small>Günlük sabit gider</small><strong>'+fmt(daily)+' ₺</strong></div><div><small>Üzüm stok değeri</small><strong>'+fmt(stock)+' ₺</strong></div></div><div class="scene-finance"><div class="row"><span>Depodaki üzüm</span><b>'+qty+' kg</b></div><div class="row"><span>Toplam tank yatırımı</span><b>'+s.tanks+' tank</b></div><div class="row"><span>Aktif üretim</span><b>'+s.jobs.length+' parti</b></div><div class="row"><span>Aktif sipariş</span><b>'+s.orders.length+' adet</b></div><div class="row"><span>Bağ arazisi</span><b>'+s.land.length+' adet</b></div><div class="row"><span>Temel gider + fıçı bakımı</span><b>'+fmt(base)+' ₺/gün</b></div><div class="row"><span>Bağ işçilerinin yevmiyesi</span><b>'+fmt(costs.vineyards)+' ₺/gün</b></div><div class="row"><span>Önolog maaşı</span><b>'+fmt(costs.oeno)+' ₺/gün</b></div><div class="row"><span>Toplam personel gideri</span><b>'+fmt(costs.total)+' ₺/gün</b></div><div class="row"><span>Bugüne kadar personel ödemesi</span><b>'+fmt(s.payrollSpent)+' ₺</b></div></div><p class="hint">Nakliye ve üzüm maliyetleri oyun ekonomisi için temsili olarak belirlenmiştir.</p>';
+ const costs=payroll();const base=85*s.tanks+18*s.barrels+(s.tasting?TASTING_DAILY_COST:0);const daily=base+costs.total;
+ $("content").innerHTML='<p class="muted small">İşletme maliyetlerini ve nakit durumunu buradan takip edebilirsin.</p><div class="wine-chips"><div><small>Nakit</small><strong>'+fmt(s.cash)+' ₺</strong></div><div><small>Günlük sabit gider</small><strong>'+fmt(daily)+' ₺</strong></div><div><small>Üzüm stok değeri</small><strong>'+fmt(stock)+' ₺</strong></div></div><div class="scene-finance"><div class="row"><span>Depodaki üzüm</span><b>'+qty+' kg</b></div><div class="row"><span>Toplam tank yatırımı</span><b>'+s.tanks+' tank</b></div><div class="row"><span>Aktif üretim</span><b>'+s.jobs.length+' parti</b></div><div class="row"><span>Aktif sipariş</span><b>'+s.orders.length+' adet</b></div><div class="row"><span>Bağ arazisi</span><b>'+s.land.length+' adet</b></div><div class="row"><span>Tadım evi</span><b>'+(s.tasting?"Açık · İtibar "+reputation()+"/100":"Kapalı")+'</b></div><div class="row"><span>Perakende cirosu</span><b>'+fmt(s.tasting?.revenue||0)+' ₺</b></div><div class="row"><span>Temel gider + fıçı bakımı</span><b>'+fmt(base)+' ₺/gün</b></div><div class="row"><span>Bağ işçilerinin yevmiyesi</span><b>'+fmt(costs.vineyards)+' ₺/gün</b></div><div class="row"><span>Önolog maaşı</span><b>'+fmt(costs.oeno)+' ₺/gün</b></div><div class="row"><span>Toplam personel gideri</span><b>'+fmt(costs.total)+' ₺/gün</b></div><div class="row"><span>Bugüne kadar personel ödemesi</span><b>'+fmt(s.payrollSpent)+' ₺</b></div></div><p class="hint">Nakliye ve üzüm maliyetleri oyun ekonomisi için temsili olarak belirlenmiştir.</p>';
 }
 function showSettings(){
  $("content").innerHTML='<p class="muted small">Oyun zamanı gerçek hayatta her 5 saniyede 1 saat ilerler. Oyun kayıtları bu tarayıcıda saklanır.</p><div class="row"><span>Oyun zamanı</span><b>'+s.day+'. Gün · '+String(s.hour).padStart(2,"0")+':00</b></div><div class="row"><span>Zaman</span><button class="btn" onclick="pauseGame()">'+(s.paused?'▶ Devam Et':'⏸ Duraklat')+'</button></div><div class="row"><span>Yeni oyun</span><button class="btn" onclick="restartGame()">Oyunu Sıfırla</button></div>';
@@ -416,6 +417,54 @@ function produceBlend(id){
  toast("🛢️ Tank "+(tank+1)+" kupaj üretimine başladı.");
 }
 
+
+const TASTING_LEVEL=12,TASTING_COST=36000,TASTING_DAILY_COST=75;
+function reputation(){return Math.min(100,Math.max(0,s.reputation||0))}
+function buildTastingRoom(i){
+ if(level()<TASTING_LEVEL)return toast("Tadım evi seviye "+TASTING_LEVEL+" düzeyinde açılır.");
+ if(s.tasting)return toast("Zaten bir tadım evin var.");
+ if(!Number.isInteger(i)||!s.land[i])return toast("Tadım evi ancak sahip olduğun bağ arazisine yapılabilir.");
+ if(s.cash<TASTING_COST)return toast("Tadım evi için "+fmt(TASTING_COST)+" ₺ gerekli.");
+ s.cash-=TASTING_COST;s.tasting={plotId:s.land[i].id,plot:i,builtDay:s.day,visitors:0,sold:0,revenue:0,repEarned:0,wine:"auto",lastSale:0};
+ s.vineyardTab="tasting";log("🏡 Bağ "+(i+1)+" üzerine tadım evi kuruldu.");save();toast("Tadım evi açıldı. Günlük perakende satışları takip edebilirsin.");
+}
+function chooseTastingWine(id){
+ if(!s.tasting||id!=="auto"&&!WINE(id))return;
+ s.tasting.wine=id;save();
+}
+function runTastingDay(){
+ if(!s.tasting)return;
+ s.cash-=TASTING_DAILY_COST;
+ const choices=[...GRAPES,...BLENDS,...s.customBlends].filter(g=>(s.wine[g.id]||0)>0);
+ const wine=s.tasting.wine==="auto"?choices.sort((a,b)=>(s.wine[b.id]||0)-(s.wine[a.id]||0))[0]:WINE(s.tasting.wine);
+ if(!wine||!(s.wine[wine.id]>0))return;
+ const qty=Math.min(1+((s.day+s.tasting.plot)%2),Math.floor(s.wine[wine.id]));
+ if(!qty)return;
+ const amount=qty*Math.round((wine.price||75)*2.3);
+ s.wine[wine.id]-=qty;s.cash+=amount;
+ s.tasting.visitors+=qty;s.tasting.sold+=qty;s.tasting.revenue+=amount;s.tasting.lastSale=s.day;
+ const rep=Math.min(4,qty+1);s.reputation=Math.min(100,(s.reputation||0)+rep);s.tasting.repEarned+=rep;s.xp+=3;
+ log("🏡 Tadım evinde "+qty+" şişe "+wine.name+" satıldı: +"+fmt(amount)+" ₺ ve +"+rep+" itibar.");
+}
+function showTastingRoom(){
+ let html='<h3 style="margin-top:20px">🏡 Bağ Tadım Evi</h3><p class="muted small">Yalnızca kendi bağ arazine inşa edebilirsin. Küçük günlük perakende satışı sağlar; esas kazanç marka itibarıdır.</p>';
+ if(!s.tasting){
+  html+='<div class="hint">Seviye '+TASTING_LEVEL+' ve satın alınmış bağ gerekli. İnşaat bedeli '+fmt(TASTING_COST)+' ₺.</div>';
+  if(level()>=TASTING_LEVEL)html+=s.land.map((p,i)=>'<div class="staff-card"><div><b>Bağ '+(i+1)+'</b><div class="small muted">'+(p.grape?escapeHtml(grape(p.grape)?.name||"Üzüm"):"Dikim yapılmamış arazi")+'</div></div><button class="btn primary" '+(s.cash<TASTING_COST?'disabled':'')+' onclick="buildTastingRoom('+i+')">Bu araziye inşa et</button></div>').join("");
+  return html;
+ }
+ const plot=s.land.findIndex(p=>p.id===s.tasting.plotId);
+ html+='<div class="tasting-hero"><div class="tasting-home">🏡</div><div><h3>'+escapeHtml(s.wineryName||"Şaraphanem")+' Tadım Evi</h3><span class="muted small">Bağ '+(plot>=0?plot+1:s.tasting.plot+1)+' · Günlük gider '+fmt(TASTING_DAILY_COST)+' ₺</span></div></div>'+
+ '<div class="wine-chips"><div><small>Marka itibarı</small><strong>⭐ '+reputation()+'/100</strong></div><div><small>Perakende satış</small><strong>'+s.tasting.sold+' şişe</strong></div><div><small>Toplam ciro</small><strong>'+fmt(s.tasting.revenue)+' ₺</strong></div></div>'+
+ '<p class="muted small" style="margin-top:13px">Her oyun gününde stok varsa 1–2 şişe satılır; stok yoksa yalnızca bakım gideri işler. İtibar yeni ziyaretçilerle artar.</p>'+
+ '<label class="input-label">Satışa çıkacak şarap</label><select class="name-input" onchange="chooseTastingWine(this.value)">'+
+ '<option value="auto" '+(s.tasting.wine==="auto"?'selected':'')+'>Otomatik · depoda en çok olan</option>'+
+ [...GRAPES,...BLENDS,...s.customBlends].filter(g=>(s.wine[g.id]||0)>0||s.tasting.wine===g.id).map(g=>'<option value="'+g.id+'" '+(s.tasting.wine===g.id?'selected':'')+'>'+escapeHtml(g.name)+' · '+(s.wine[g.id]||0)+' şişe</option>').join("")+'</select>'+
+ '<div class="row"><span>Son satış</span><b>'+(s.tasting.lastSale?s.tasting.lastSale+". oyun günü":"Henüz satış yok")+'</b></div>'+
+ '<div class="row"><span>Toplam tadım evi itibarı</span><b>+'+s.tasting.repEarned+'</b></div>';
+ return html;
+}
+
 const LAND_COST=18000;const DAYS_TO_HARVEST=30;
 function buyLand(){
  if(level()<4)return toast("Bağ arazisi seviye 4 düzeyinde açılır.");
@@ -442,11 +491,12 @@ function harvestLand(i){
  s.xp+=25;p.planted=s.day;p.workProgress=0;updateHarvestEstimate(p);
  save();toast("🍇 "+qty+" kg üzüm depoya eklendi.");
 }
-function vineyardTab(view){s.vineyardTab=view==="staff"?"staff":"plots";save();}
+function vineyardTab(view){s.vineyardTab=["staff","plots","tasting"].includes(view)?view:"plots";save();}
 function showVineyard(){
  let html='<h2>🌿 Bağ Arazilerim</h2><p class="muted small">Bağ satın al, üzümünü dik, işçi çalıştır ve takvime göre hasat et. Günlük yevmiyeler otomatik olarak nakitten düşer.</p>'+
- '<div class="seg"><button class="'+(s.vineyardTab==="plots"?'active':'')+'" onclick="vineyardTab(\'plots\')">🌿 Arazi ve Hasat</button><button class="'+(s.vineyardTab==="staff"?'active':'')+'" onclick="vineyardTab(\'staff\')">👷 Personel ve Yevmiye</button></div>';
- if(s.vineyardTab==="staff"){
+ '<div class="seg"><button class="'+(s.vineyardTab==="plots"?'active':'')+'" onclick="vineyardTab(\'plots\')">🌿 Arazi ve Hasat</button><button class="'+(s.vineyardTab==="staff"?'active':'')+'" onclick="vineyardTab(\'staff\')">👷 Personel ve Yevmiye</button><button class="'+(s.vineyardTab==="tasting"?'active':'')+'" onclick="vineyardTab(\'tasting\')">🏡 Tadım Evi</button></div>';
+ if(s.vineyardTab==="tasting"){html+=showTastingRoom();}
+ else if(s.vineyardTab==="staff"){
   const totalWorkers=s.land.reduce((n,p)=>n+(p.workers||[]).length,0);
   html+='<div class="wine-chips" style="margin-top:17px"><div><small>Bağ çalışanları</small><strong>'+totalWorkers+' kişi</strong></div><div><small>Günlük yevmiye</small><strong>'+fmt(payroll().vineyards)+' ₺</strong></div><div><small>Personel sınırı</small><strong>'+ (level()>=8?'2':'1')+' / bağ</strong></div></div>';
   if(!s.land.length)html+='<div class="hint" style="margin-top:20px">Önce bağ arazisi edin. Bağ satın aldığında burada işçi alabilir ve günlük yevmiyelerini yönetebilirsin.</div>';
@@ -538,7 +588,7 @@ function deliver(id){
  stock[o.grape]-=o.qty;s.cash+=payment;s.xp+=25;
  s.orders=s.orders.filter(x=>x.id!==id);
  s.unreadIds=s.unreadIds.filter(x=>x!==id);s.unread=s.unreadIds.length;
- log(o.name+" siparişi teslim edildi: "+fmt(payment)+" ₺.");
+ s.reputation=Math.min(100,(s.reputation||0)+1);log(o.name+" siparişi teslim edildi: "+fmt(payment)+" ₺. İtibar +1.");
  save();toast("Sipariş teslim edildi!");
 }
 function hour(){
@@ -550,6 +600,7 @@ function hour(){
    const labor=payroll();
    const expenses=85*s.tanks+18*s.barrels+labor.total;
    s.cash-=expenses;s.lastPayroll=labor.total;s.payrollSpent+=labor.total;
+   runTastingDay();
    if(labor.total)log("Personel ödemeleri: bağ işçileri "+fmt(labor.vineyards)+" ₺, önolog "+fmt(labor.oeno)+" ₺.");
    if(s.cash<0)log("⚠️ Bakiye eksiye düştü; personel ve işletme maliyetlerini gözden geçir.");
    for(const p of s.land){
