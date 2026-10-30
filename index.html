@@ -45,7 +45,8 @@ html,body{height:100%;overflow:hidden}body{background:#c7d8be;color:#26362f}
  .input-label{display:block;font-size:12px;color:#697b70;font-weight:700;margin:13px 0 6px}
  .name-row{display:flex;gap:9px;align-items:center}
  .blend-creator{background:#f7f5f1;border:1px solid #e8e4db;border-radius:15px;padding:14px;margin-top:10px}.blend-selectors{display:grid;grid-template-columns:1fr 1fr;gap:9px}.blend-creator select{padding:11px;width:100%;border:1px solid #d9dcd7;border-radius:10px;background:#fff;color:#293e34}.blend-creator .input-label{font-size:13px}.blend-creator .hidden{display:none!important}@media(max-width:600px){.blend-selectors{grid-template-columns:1fr}}
-.name-row select{padding:10px;border:1px solid #d9dcd7;border-radius:10px;background:#fff;color:#293e34;max-width:100%}</style></head><body>
+.name-row select{padding:10px;border:1px solid #d9dcd7;border-radius:10px;background:#fff;color:#293e34;max-width:100%}.staff-current,.staff-card{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #e4e7e3;background:white;border-radius:13px;padding:13px;margin:10px 0}.staff-card{background:#fcfcf9}.staff-card>div,.staff-current>div{flex:1;min-width:0}.staff-current .btn,.staff-card .btn{flex-shrink:0}.staff-pay{font-size:12px;color:#70354e;font-weight:700;margin-top:8px}.staff-plot{border:1px solid #e6e7e3;border-radius:16px;padding:16px;margin:18px 0;background:#fffdfa}.staff-plot>h3{font-size:18px}.staff-plot .btn{margin:6px 0}.staff-plot .name-input{width:auto;max-width:100%}#content .seg{margin-bottom:10px}@media(max-width:550px){.staff-current,.staff-card{align-items:stretch;flex-direction:column}.staff-card .btn,.staff-current .btn{align-self:flex-start}}
+</style></head><body>
 <div class="world" aria-label="Pastel bağlar, Türkiye köyleri ve şaraphane illüstrasyonu"></div>
 <header class="topbar"><div class="brand">🍇 Winehouse</div><div class="fill"></div><span class="topinfo"><b id="money">35.000</b> ₺</span><span class="topdivider"></span><span class="topinfo">★ <b id="level">1</b>. Seviye</span><span class="topdivider"></span><span class="topinfo">☀ <b id="clock">1. Gün, 08:00</b></span><button class="btn small clockpause" aria-label="Zamanı durdur veya devam ettir" id="pause" onclick="pauseGame()">⏸</button></header>
 <div class="scene-label"><span class="scene-kicker" id="stage">ÜRETİMHANE</span><h1 id="headline">Kendi şaraphaneni kur.</h1><span id="subtitle">Türkiye'de üretim yapacağın şehri seçerek başla.</span></div>
@@ -293,11 +294,66 @@ function produceBlend(id){
  s.xp+=9;log(b.name+" üretimine başlandı.");save();toast("Kupaj üretimine başlandı.");
 }
 
+
 const LAND_COST=18000;const DAYS_TO_HARVEST=30;
-function buyLand(){if(level()<4)return toast("Bağ arazisi seviye 4'te açılır.");if(s.cash<LAND_COST)return toast("Arazi için yeterli bütçe yok.");if(s.land.length>=3)return toast("En fazla 3 bağ arazisi alınabilir.");s.cash-=LAND_COST;s.land.push({id:Date.now()+s.land.length,grape:null,planted:null,harvest:null});log("Yeni bağ arazisi satın alındı.");save();}
-function plantLand(i,g){let plot=s.land[i];if(!plot||plot.grape)return;let fee=900;if(s.cash<fee)return toast("Dikim için 900 ₺ gerekli.");if(level()<grape(g).level)return toast("Bu çeşit henüz açık değil.");s.cash-=fee;plot.grape=g;plot.planted=s.day;plot.harvest=s.day+DAYS_TO_HARVEST;log(grape(g).name+" fidanları dikildi.");save();}
-function harvestLand(i){let p=s.land[i];if(!p||!p.grape||s.day<p.harvest)return toast("Henüz hasat zamanı değil.");s.grapes[p.grape]=(s.grapes[p.grape]||0)+80;log(grape(p.grape).name+" bağından 80 kg üzüm hasat edildi.");s.xp+=25;p.planted=s.day;p.harvest=s.day+DAYS_TO_HARVEST;save();toast("🍇 80 kg üzüm depoya eklendi.");}
-function showVineyard(){$("content").innerHTML='<h2>🌿 Bağ Arazilerim</h2><p class="muted small">Seviye 4\'te açılır. Arazi 18.000 ₺, ilk dikim 900 ₺. Her 30 oyun gününde 80 kg hasat edilir. Hasat edilen üzümün nakliye bedeli yoktur; yatırımın geri dönüşü birkaç hasat sürer.</p>'+(level()<4?'<div class="hint">🔒 Bağ yatırımı seviye 4\'te açılacak. Mevcut seviye: '+level()+'</div>':'<button class="btn primary" onclick="buyLand()" '+(s.cash<LAND_COST||s.land.length>=3?'disabled':'')+'>+ Arazi satın al · '+fmt(LAND_COST)+' ₺</button>')+s.land.map((p,i)=>'<div class="item"><div><h3>🌿 Bağ '+(i+1)+'</h3>'+(p.grape?'<div class="small muted">'+grape(p.grape).name+' · Sonraki hasat: '+p.harvest+'. gün · Kalan '+Math.max(0,p.harvest-s.day)+' gün</div>':'<div class="small muted">Henüz dikim yapılmadı.</div>')+'</div><div>'+(p.grape?'<button class="btn primary" onclick="harvestLand('+i+')" '+(s.day<p.harvest?'disabled':'')+'>Hasat Et</button>':'<select onchange="if(this.value)plantLand('+i+',this.value)"><option value="">Üzüm dik...</option>'+GRAPES.filter(g=>g.level<=level()).map(g=>'<option value="'+g.id+'">'+g.name+' · 900 ₺</option>').join('')+'</select>')+'</div></div>').join("")+'<div class="hint" style="margin-top:15px">Bu sürümde 30 oyun günlük döngü basitleştirilmiş yetiştirme modelidir; gerçek bağcılıkta hasat yıllık ve bölge/iklime göre mevsimseldir.</div>'}
+function buyLand(){
+ if(level()<4)return toast("Bağ arazisi seviye 4 düzeyinde açılır.");
+ if(s.cash<LAND_COST)return toast("Arazi için yeterli bütçe yok.");
+ if(s.land.length>=3)return toast("En fazla 3 bağ arazisi alınabilir.");
+ s.cash-=LAND_COST;
+ s.land.push({id:Date.now()+s.land.length,grape:null,planted:null,harvest:null,workers:[],workProgress:0});
+ s.vineyardTab="staff";log("Yeni bağ arazisi satın alındı. Üretim için işçi istihdam et.");
+ save();toast("🌿 Arazi alındı. Personel ekranından bağ işçisi işe al.");
+}
+function plantLand(i,g){
+ const p=s.land[i],v=grape(g);if(!p||p.grape||!v)return;
+ if(level()<v.level)return toast("Bu üzüm çeşidi henüz açık değil.");
+ if(s.cash<900)return toast("Dikim için 900 ₺ gerekli.");
+ s.cash-=900;p.grape=g;p.planted=s.day;p.workProgress=0;updateHarvestEstimate(p);
+ log(v.name+" fidanları bağa dikildi.");save();toast("Fidanlar dikildi. Çalışanlarla hasat takvimini başlat.");
+}
+function harvestLand(i){
+ const p=s.land[i];
+ if(!p||!p.grape||p.workProgress<30||!p.workers?.length)return toast("Hasat hazır değil veya bağda çalışan yok.");
+ const qty=plotYield(p),name=grape(p.grape).name;
+ s.grapes[p.grape]=(s.grapes[p.grape]||0)+qty;
+ log(name+" bağından "+qty+" kg üzüm hasat edildi.");
+ s.xp+=25;p.planted=s.day;p.workProgress=0;updateHarvestEstimate(p);
+ save();toast("🍇 "+qty+" kg üzüm depoya eklendi.");
+}
+function vineyardTab(view){s.vineyardTab=view==="staff"?"staff":"plots";save();}
+function showVineyard(){
+ let html='<h2>🌿 Bağ Arazilerim</h2><p class="muted small">Bağ satın al, üzümünü dik, işçi çalıştır ve takvime göre hasat et. Günlük yevmiyeler otomatik olarak nakitten düşer.</p>'+
+ '<div class="seg"><button class="'+(s.vineyardTab==="plots"?'active':'')+'" onclick="vineyardTab(\'plots\')">🌿 Arazi ve Hasat</button><button class="'+(s.vineyardTab==="staff"?'active':'')+'" onclick="vineyardTab(\'staff\')">👷 Personel ve Yevmiye</button></div>';
+ if(s.vineyardTab==="staff"){
+  const totalWorkers=s.land.reduce((n,p)=>n+(p.workers||[]).length,0);
+  html+='<div class="wine-chips" style="margin-top:17px"><div><small>Bağ çalışanları</small><strong>'+totalWorkers+' kişi</strong></div><div><small>Günlük yevmiye</small><strong>'+fmt(payroll().vineyards)+' ₺</strong></div><div><small>Personel sınırı</small><strong>'+ (level()>=8?'2':'1')+' / bağ</strong></div></div>';
+  if(!s.land.length)html+='<div class="hint" style="margin-top:20px">Önce bağ arazisi edin. Bağ satın aldığında burada işçi alabilir ve günlük yevmiyelerini yönetebilirsin.</div>';
+  for(const [i,p] of s.land.entries()){
+   html+='<div class="staff-plot"><h3>🌿 Bağ '+(i+1)+(p.grape?' · '+escapeHtml(grape(p.grape)?.name||"Üzüm"):' · Henüz dikim yok')+'</h3>'+
+   '<div class="small muted">Çalışan '+p.workers.length+' / '+(level()>=8?2:1)+' · Günlük '+fmt(plotPayroll(p))+' ₺ · '+(p.grape?'İlerleme '+Math.min(100,Math.floor((p.workProgress/30)*100))+'%':'Dikim yapılmadı')+'</div>'+
+   p.workers.map(w=>{const profile=staffProfile(w.profile);return '<div class="staff-current"><div><strong>'+escapeHtml(profile?.name||"Bağ İşçisi")+'</strong><div class="small muted">'+(profile?.skills||"Bağ bakımı")+' · '+fmt(dailyWage(profile||FIELD_STAFF[0]))+' ₺/gün</div></div><button class="btn" onclick="dismissFieldWorker('+i+','+w.id+')">İşten çıkar</button></div>'}).join("")+
+   '<h3 style="margin:18px 0 9px">İşe alım adayları</h3>'+
+   FIELD_STAFF.map(prof=>'<div class="staff-card"><div><strong>'+escapeHtml(prof.name)+'</strong><div class="small muted">'+prof.skills+'</div><div class="small">⏱️ '+Math.round(prof.speed*100)+'% çalışma hızı · 🍇 +'+Math.round(prof.yieldBonus*100)+'% rekolte</div><div class="staff-pay">Yevmiye '+fmt(dailyWage(prof))+' ₺ · 30 gün '+fmt(dailyWage(prof)*30)+' ₺</div></div><button class="btn primary" '+(level()<prof.unlock||p.workers.length>=(level()>=8?2:1)||s.cash<3*dailyWage(prof)?'disabled':'')+' onclick="hireFieldWorker('+i+',\''+prof.id+'\')">'+(level()<prof.unlock?'🔒 Seviye '+prof.unlock:'İşe al')+'</button></div>').join("")+'</div>';
+  }
+  html+='<div class="hint">Bağ işçileri olmadan büyüme ilerlemez. İşçi kalitesi hasat süresini ve rekolteyi etkiler. Ücretler oyuncu seviyesi yükseldikçe kademeli artar.</div>';
+ }else{
+  html+=(level()<4?'<div class="hint" style="margin-top:18px">🔒 Bağ satın alma seviye 4 düzeyinde açılır. Şu an seviye '+level()+'.</div>':
+  '<button class="btn primary" style="margin-top:17px" onclick="buyLand()" '+(s.cash<LAND_COST||s.land.length>=3?'disabled':'')+'>+ Arazi satın al · '+fmt(LAND_COST)+' ₺</button>');
+  for(const [i,p] of s.land.entries()){
+   const eta=harvestEstimate(p);
+   html+='<div class="staff-plot"><h3>🌿 Bağ '+(i+1)+'</h3>'+
+   (p.grape?'<div class="small muted">'+escapeHtml(grape(p.grape)?.name||"Üzüm")+' · İşlenmiş süre '+p.workProgress.toFixed(1)+' / 30 iş günü · '+(p.workProgress>=30?'Hasat hazır':eta?'Tahmini hasat: '+eta+'. gün':'Çalışan yok: büyüme durdu')+'</div>':'<div class="muted small">Fidan dikimi yapılmadı.</div>')+
+   '<div class="row"><span>Çalışan / günlük yevmiye</span><b>'+p.workers.length+' kişi / '+fmt(plotPayroll(p))+' ₺</b></div>'+
+   (p.grape?'<button class="btn primary" onclick="harvestLand('+i+')" '+(p.workProgress<30||!p.workers.length?'disabled':'')+'>🍇 Hasat et · '+plotYield(p)+' kg</button>':
+   '<select class="name-input" aria-label="Bağa ekilecek üzüm" onchange="if(this.value)plantLand('+i+',this.value)"><option value="">Üzüm çeşidi seç ve dik (900 ₺)</option>'+GRAPES.filter(g=>g.level<=level()).map(g=>'<option value="'+g.id+'">'+g.name+'</option>').join("")+'</select>')+
+   ' <button class="btn" onclick="vineyardTab(\'staff\')">👷 Personel</button></div>';
+  }
+  html+='<div class="hint" style="margin-top:16px">Hasat döngüsü oyun için sadeleştirilmiş 30 iş günü üzerinden hesaplanır. Gerçekte bağcılık yıllık mevsimlere bağlıdır.</div>';
+ }
+ $("content").innerHTML=html;
+}
+
 function gameHour(){return s.day*24+s.hour}
 function makeOrder(){
  if(!s.built||s.orders.length>=4)return;
