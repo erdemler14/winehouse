@@ -69,7 +69,7 @@ const GRAPES=[{id:"okuz",name:"Öküzgözü",origin:"Elazığ",price:54,level:1,
 const CUSTOMERS=["Kıyı Restoran","Bağ Evi Bistro","Meydan Otel","Eski Çarşı Lokantası","Sahil Tadım Evi","Şehir Kulübü"];
 const fresh=()=>({city:"İzmir",cash:35000,day:1,hour:8,paused:false,updated:Date.now(),built:false,tanks:1,xp:0,grapes:{},wine:{},jobs:[],orders:[],unread:0,land:[],logs:["Hoş geldin. Üretim şehrini seç."],view:"market",id:0});
 let s;try{s=JSON.parse(localStorage.getItem("winehouse-turkiye-v1"))||fresh()}catch(e){s=fresh()}
-s.unread??=0;s.land??=[];const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString("tr-TR"),city=n=>CITIES.find(c=>c.n===n)||CITIES[0],grape=id=>GRAPES.find(g=>g.id===id),level=()=>1+Math.floor(s.xp/90),capacity=()=>s.tanks*100,active=()=>s.jobs.reduce((n,j)=>n+j.kg,0);
+s.unread??=0;s.land??=[];s.unreadIds??=(s.orders||[]).slice(-s.unread).map(o=>o.id);s.unread=s.unreadIds.length;const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString("tr-TR"),city=n=>CITIES.find(c=>c.n===n)||CITIES[0],grape=id=>GRAPES.find(g=>g.id===id),level=()=>1+Math.floor(s.xp/90),capacity=()=>s.tanks*100,active=()=>s.jobs.reduce((n,j)=>n+j.kg,0);
 function km(a,b){const r=Math.PI/180,lat=(b.lat-a.lat)*r,lon=(b.lon-a.lon)*r,t=Math.sin(lat/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(lon/2)**2;return Math.round(6371*2*Math.atan2(Math.sqrt(t),Math.sqrt(1-t)))}
 function transport(g,kg){return Math.round((60+km(city(g.origin),city(s.city))*0.22)*kg/10)}
 function quote(g,kg){return {goods:g.price*kg,freight:transport(g,kg),total:g.price*kg+transport(g,kg),km:km(city(g.origin),city(s.city))}}
@@ -83,12 +83,12 @@ $("location").textContent=s.city;$("capacity").textContent=capacity()+" kg";$("g
 function selectCity(n){if(s.built)return;s.city=n;save()}
 function build(){let fee=city(s.city).fee;if(s.built||s.cash<fee)return toast("Yeterli bütçe yok.");s.cash-=fee;s.built=true;s.xp+=20;log(s.city+" üretimhanesi kuruldu; 1 tank hazır.");save();closePanel();toast("🏭 Üretimhanen hazır! Alt menüden üzüm pazarına gidebilirsin.")}
 function buyTank(){if(level()<s.tanks*2)return toast("Önce seviye atlamalısın.");let fee=5000*s.tanks;if(s.cash<fee)return toast("Yeterli bütçe yok.");s.cash-=fee;s.tanks++;log("Yeni üretim tankı satın alındı.");save()}
-function tab(v){s.view=v;if(v==="sales")s.unread=0;save()}
+function tab(v){s.view=v;if(v==="sales"){s.unread=0;s.unreadIds=[];}save()}
 const LABELS={market:"Üzüm Pazarı",produce:"Şarap Üretimi",sales:"Müşteri Siparişleri",vineyard:"Bağ Arazisi",factory:"Şaraphanem",finance:"Finans",settings:"Ayarlar"};
 function openPanel(v){
  if(!s.built){$("panelHeading").textContent="Şehrini seç";$("modalOverlay").classList.add("open");$("modalOverlay").setAttribute("aria-hidden","false");return;}
  if(!LABELS[v])v="market";
- s.view=v;if(v==="sales")s.unread=0;
+ s.view=v;if(v==="sales"){s.unread=0;s.unreadIds=[];}
  $("panelHeading").textContent=LABELS[v];
  $("modalOverlay").classList.add("open");$("modalOverlay").setAttribute("aria-hidden","false");
  save();
@@ -126,10 +126,47 @@ function buyLand(){if(level()<4)return toast("Bağ arazisi seviye 4'te açılır
 function plantLand(i,g){let plot=s.land[i];if(!plot||plot.grape)return;let fee=900;if(s.cash<fee)return toast("Dikim için 900 ₺ gerekli.");if(level()<grape(g).level)return toast("Bu çeşit henüz açık değil.");s.cash-=fee;plot.grape=g;plot.planted=s.day;plot.harvest=s.day+DAYS_TO_HARVEST;log(grape(g).name+" fidanları dikildi.");save();}
 function harvestLand(i){let p=s.land[i];if(!p||!p.grape||s.day<p.harvest)return toast("Henüz hasat zamanı değil.");s.grapes[p.grape]=(s.grapes[p.grape]||0)+80;log(grape(p.grape).name+" bağından 80 kg üzüm hasat edildi.");s.xp+=60;p.planted=s.day;p.harvest=s.day+DAYS_TO_HARVEST;save();toast("🍇 80 kg üzüm depoya eklendi.");}
 function showVineyard(){$("content").innerHTML='<h2>🌿 Bağ Arazilerim</h2><p class="muted small">Seviye 4\'te açılır. Arazi 18.000 ₺, ilk dikim 900 ₺. Her 30 oyun gününde 80 kg hasat edilir. Hasat edilen üzümün nakliye bedeli yoktur; yatırımın geri dönüşü birkaç hasat sürer.</p>'+(level()<4?'<div class="hint">🔒 Bağ yatırımı seviye 4\'te açılacak. Mevcut seviye: '+level()+'</div>':'<button class="btn primary" onclick="buyLand()" '+(s.cash<LAND_COST||s.land.length>=3?'disabled':'')+'>+ Arazi satın al · '+fmt(LAND_COST)+' ₺</button>')+s.land.map((p,i)=>'<div class="item"><div><h3>🌿 Bağ '+(i+1)+'</h3>'+(p.grape?'<div class="small muted">'+grape(p.grape).name+' · Sonraki hasat: '+p.harvest+'. gün · Kalan '+Math.max(0,p.harvest-s.day)+' gün</div>':'<div class="small muted">Henüz dikim yapılmadı.</div>')+'</div><div>'+(p.grape?'<button class="btn primary" onclick="harvestLand('+i+')" '+(s.day<p.harvest?'disabled':'')+'>Hasat Et</button>':'<select onchange="if(this.value)plantLand('+i+',this.value)"><option value="">Üzüm dik...</option>'+GRAPES.filter(g=>g.level<=level()).map(g=>'<option value="'+g.id+'">'+g.name+' · 900 ₺</option>').join('')+'</select>')+'</div></div>').join("")+'<div class="hint" style="margin-top:15px">Bu sürümde 30 oyun günlük döngü basitleştirilmiş yetiştirme modelidir; gerçek bağcılıkta hasat yıllık ve bölge/iklime göre mevsimseldir.</div>'}
-function makeOrder(){if(!s.built||s.orders.length>=4)return;let types=[...GRAPES,...BLENDS].filter(g=>g.level<=level());let g=types[(s.day+s.orders.length+s.id)%types.length];let qty=7*(1+s.id%3),price=Math.round(qty*((g.price||115)*2.1));let name=CUSTOMERS[s.id%CUSTOMERS.length];s.orders.push({id:++s.id,name,grape:g.id,qty,price,deadline:s.day*24+s.hour+96});if(s.view!=="sales")s.unread++;if(s.view!=="sales")toast("🔔 "+name+" yeni sipariş gönderdi!");log(name+" "+qty+" şişe "+g.name+" istedi.")}
+function gameHour(){return s.day*24+s.hour}
+function makeOrder(){
+ if(!s.built||s.orders.length>=4)return;
+ const types=[...GRAPES,...BLENDS].filter(g=>g.level<=level());
+ const g=types[(s.day+s.orders.length+s.id)%types.length];
+ const qty=7*(1+s.id%3),price=Math.round(qty*((g.price||115)*2.1));
+ const name=CUSTOMERS[s.id%CUSTOMERS.length];
+ const id=++s.id;
+ s.orders.push({id,name,grape:g.id,qty,price,deadline:gameHour()+96});
+ if(s.view!=="sales"){s.unreadIds.push(id);s.unread=s.unreadIds.length;toast("🔔 "+name+" yeni sipariş gönderdi!")}
+ log(name+" "+qty+" şişe "+g.name+" istedi.");
+}
+function refreshExpiredOrders(){
+ if(!s.built||!s.orders.length)return;
+ const now=gameHour(),expired=s.orders.filter(o=>o.deadline<=now);
+ if(!expired.length)return;
+ const expiredIds=new Set(expired.map(o=>o.id));
+ s.orders=s.orders.filter(o=>!expiredIds.has(o.id));
+ s.unreadIds=s.unreadIds.filter(id=>!expiredIds.has(id));
+ s.unread=s.unreadIds.length;
+ expired.forEach(o=>log(o.name+" siparişinin teslim süresi doldu."));
+ // Süresi dolan her müşteri talebinin yerine, güncel süre ve fiyatla yeni talep oluştur.
+ for(let i=0;i<expired.length;i++)makeOrder();
+ if(expired.length)toast("⏰ "+expired.length+" siparişin süresi doldu; liste güncellendi.");
+}
 function showSales(){$("content").innerHTML='<h2>Gelen Siparişler</h2><p class="muted small">Restoran, otel ve yerel işletmelerden gelen siparişleri karşıla. Üretim planını stoklara göre yap.</p>'+(s.orders.length?s.orders.map(o=>'<div class="item"><div><h3>🍽️ '+o.name+'</h3><div class="muted small">'+o.qty+' şişe '+WINE(o.grape).name+' · Depoda '+(s.wine[o.grape]||0)+' şişe</div><div class="muted small">Kalan '+Math.max(0,o.deadline-(s.day*24+s.hour))+' oyun saati</div><div class="cost" style="margin-top:7px">'+fmt(o.price)+' ₺</div></div><button class="btn primary" '+((s.wine[o.grape]||0)<o.qty?"disabled":"")+' onclick="deliver('+o.id+')">Teslim et</button></div>').join(""):'<div class="hint">Yeni müşteri siparişleri oyun günü ilerledikçe gelir.</div>')}
-function deliver(id){let o=s.orders.find(o=>o.id===id);if(!o||(s.wine[o.grape]||0)<o.qty)return toast("Şişe stoğu yetersiz.");s.wine[o.grape]-=o.qty;s.cash+=o.price;s.xp+=40;s.orders=s.orders.filter(x=>x.id!==id);log(o.name+" siparişi teslim edildi: "+fmt(o.price)+" ₺.");save();toast("Sipariş teslim edildi!")}
-function hour(){s.hour++;if(s.hour===24){s.hour=0;s.day++;if(s.built){s.cash-=85*s.tanks;s.orders=s.orders.filter(o=>{if(o.deadline<s.day*24){log(o.name+" siparişi süresi doldu.");return false}return true});if(s.orders.length<3)makeOrder()}}let t=s.day*24+s.hour;let done=s.jobs.filter(j=>j.finish<=t);s.jobs=s.jobs.filter(j=>j.finish>t);for(const j of done){s.wine[j.id]=(s.wine[j.id]||0)+j.kg/10*7;s.xp+=25;log(WINE(j.id).name+" şarabı tamamlandı: "+(j.kg/10*7)+" şişe.")}}
+function deliver(id){refreshExpiredOrders();let o=s.orders.find(o=>o.id===id);if(!o)return save(),toast("Bu siparişin süresi doldu. Liste yenilendi.");if((s.wine[o.grape]||0)<o.qty)return toast("Şişe stoğu yetersiz.");s.wine[o.grape]-=o.qty;s.cash+=o.price;s.xp+=40;s.orders=s.orders.filter(x=>x.id!==id);s.unreadIds=s.unreadIds.filter(x=>x!==id);s.unread=s.unreadIds.length;log(o.name+" siparişi teslim edildi: "+fmt(o.price)+" ₺.");save();toast("Sipariş teslim edildi!")}
+function hour(){
+ s.hour++;
+ if(s.hour===24){
+  s.hour=0;s.day++;
+  if(s.built)s.cash-=85*s.tanks;
+ }
+ const now=gameHour();
+ const done=s.jobs.filter(j=>j.finish<=now);
+ s.jobs=s.jobs.filter(j=>j.finish>now);
+ for(const j of done){s.wine[j.id]=(s.wine[j.id]||0)+j.kg/10*7;s.xp+=25;log(WINE(j.id).name+" şarabı tamamlandı: "+(j.kg/10*7)+" şişe.")}
+ refreshExpiredOrders();
+ // Günlük yeni talepler: aktif sipariş sayısı üçe ulaşıncaya kadar günde bir müşteri.
+ if(s.built&&s.hour===0&&s.orders.length<3)makeOrder();
+}
 function pauseGame(){s.paused=!s.paused;s.updated=Date.now();save()}
 function tick(){let n=Date.now();if(s.paused){s.updated=n;return}let passed=Math.floor((n-s.updated)/5000);if(passed<=0)return;for(let i=0;i<Math.min(24,passed);i++)hour();s.updated=n-(passed<24?(n-s.updated)%5000:0);save()}
 tick();render();
