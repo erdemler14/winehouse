@@ -51,6 +51,7 @@ html,body{height:100%;overflow:hidden}body{background:#c7d8be;color:#26362f}
 .market-offers{display:grid;gap:14px;margin:16px 0}.offer-grape{border:1px solid #e4e6e0;border-radius:16px;background:#fffdfa;padding:16px}.offer-heading{display:flex;justify-content:space-between;gap:16px;align-items:center;border-bottom:1px solid #ebebe4;padding-bottom:10px;margin-bottom:8px}.offer-heading h3{margin:0 0 6px}.offer-row{padding:11px 0;border-bottom:1px solid #edeee9;display:flex;align-items:center;justify-content:space-between;gap:10px}.offer-row:last-child{border:0;padding-bottom:0}.offer-info{min-width:0;flex:1}.offer-info>b{font-size:13px}.offer-deal{display:inline-block;margin-left:7px;padding:2px 6px;background:#e2eedb;color:#40623c;border-radius:7px;font-size:10px;font-weight:700}.offer-actions{text-align:right;white-space:nowrap}.offer-actions strong{display:block;color:#66314a;margin-bottom:6px}.offer-actions strong small{color:#777;font-weight:normal;font-size:11px}.offer-actions .btn{padding:7px 9px;font-size:12px;margin-left:4px}.offer-grape>.hint{margin-top:12px}@media(max-width:600px){.offer-row{align-items:flex-start;flex-direction:column}.offer-actions{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left}.offer-actions strong{margin-bottom:0}.offer-heading{align-items:flex-start}}
 .tasting-hero{display:flex;gap:15px;align-items:center;background:#e5efdf;border:1px solid #d9e5d5;border-radius:16px;padding:18px;margin:14px 0}.tasting-hero h3{margin:0 0 6px}.tasting-home{width:75px;height:75px;background:#f9f3de;border-radius:17px;display:grid;place-items:center;font-size:44px}#content .seg{display:flex;gap:6px;flex-wrap:wrap}#content .seg button{flex:1;min-width:112px}@media(max-width:500px){#content .seg button{font-size:12px;padding:8px 3px}}
 .bankruptcy-overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:18px;background:#15281ddb;backdrop-filter:blur(5px)}.bankruptcy-overlay.visible{display:flex}.bankruptcy-window{max-width:440px;width:100%;border-radius:22px;background:#fffcf4;padding:28px;text-align:center;box-shadow:0 25px 90px #0006}.bankruptcy-window h2{font:500 31px Georgia,serif;color:#704050}.bankruptcy-window .row{text-align:left}.bankruptcy-window .btn{margin-top:18px}.bankruptcy-symbol{font-size:60px;filter:grayscale(1)}.bank-alert{position:absolute;top:-5px;right:0;min-width:18px;height:18px;background:#c84e54;color:#fff;border-radius:20px;font-size:12px;font-weight:800;display:grid;place-items:center;border:2px solid #fff}.bank-alert.hidden{display:none}.bank-warning{margin-top:16px;background:#fff0e3;border:1px solid #e7ba9f;color:#844832}.bank-loan{padding:16px;border:1px solid #e2e1d9;border-radius:16px;background:#fffcf5;margin:17px 0}.bank-loan h3{margin-top:0}.bank-offer{display:flex;justify-content:space-between;align-items:center;gap:15px;background:#fff;border:1px solid #e4e7de;border-radius:15px;padding:14px;margin:10px 0}.bank-offer h3{font-size:16px;margin:0 0 5px}.bank-sub{font-size:12px;color:#68736d;margin-top:8px}.bank-apply{display:flex;flex-direction:column;align-items:flex-end;gap:7px}.bank-apply strong{color:#3b6650;white-space:nowrap;font-size:18px}@media(max-width:570px){.bank-offer{flex-direction:column;align-items:stretch}.bank-apply{flex-direction:row;justify-content:space-between}}
+.wine-order{background:#fffdf8;border:1px solid #e6e8dd;border-radius:17px;padding:16px;margin:13px 0}.wine-order-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.wine-order-title h3{margin:0 0 5px}.wine-order-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.wine-order-option{background:#fff;border:1px solid #e4e8e1;border-radius:12px;padding:13px;display:flex;flex-direction:column;gap:10px;justify-content:space-between}.wine-order-option.oak{background:#fdf9f3;border-color:#e9d9c5}.wine-order-option strong{font-size:14px}.wine-order-price{font-weight:800;font-size:19px;color:#385b45}.wine-order-option.oak .wine-order-price{color:#783c4b}.wine-order-option .btn:disabled{opacity:.45}.wine-order-mixed{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f2f5ed;border-radius:12px;padding:12px 14px;margin-top:11px}.wine-order-mixed .btn{flex-shrink:0}@media(max-width:510px){.wine-order-options{grid-template-columns:1fr}.wine-order-title{flex-direction:column;gap:3px}.wine-order-option{gap:6px}}
 </style></head><body>
 <div class="world" aria-label="Pastel bağlar, Türkiye köyleri ve şaraphane illüstrasyonu"></div>
 <header class="topbar"><div class="brand">🍇 Winehouse</div><div class="fill"></div><span class="topinfo"><b id="money">35.000</b> ₺</span><span class="topdivider"></span><span class="topinfo">★ <b id="level">1</b>. Seviye</span><span class="topdivider"></span><span class="topinfo">🏵️ <b id="rep">0</b> İtibar</span><span class="topdivider"></span><span class="topinfo">☀ <b id="clock">1. Gün, 08:00</b></span><button class="btn small clockpause" aria-label="Zamanı durdur veya devam ettir" id="pause" onclick="pauseGame()">⏸</button></header>
@@ -80,7 +81,7 @@ const GRAPES=[{"id":"okuz","name":"Öküzgözü","origin":"Elazığ","price":54,
 const CUSTOMERS=["Kıyı Restoran","Bağ Evi Bistro","Meydan Otel","Eski Çarşı Lokantası","Sahil Tadım Evi","Şehir Kulübü"];
 const fresh=()=>({city:"İzmir",cash:35000,day:1,hour:8,paused:false,updated:Date.now(),built:false,tanks:1,xp:0,grapes:{},wine:{},jobs:[],orders:[],unread:0,land:[],logs:["Hoş geldin. Üretim şehrini seç."],view:"market",id:0,wineryName:"",customBlends:[],barrels:0,agingJobs:[],agedWine:{},agedValue:{},grapeFilter:"available",oenologist:null,nextStaffId:1,payrollSpent:0,lastPayroll:0,vineyardTab:"plots",nextOrderAt:null,bank:{loan:null,misses:0,bankrupt:false,creditId:0},grapeLots:[],grapeWaste:{},offers:[],offerSerial:1,marketSeq:1,tasting:null,reputation:0});
 let s;try{s=JSON.parse(localStorage.getItem("winehouse-turkiye-v1"))||fresh()}catch(e){s=fresh()}
-s.bank??={loan:null,misses:0,bankrupt:false,creditId:0};s.bank.loan??=null;s.bank.misses??=0;s.bank.bankrupt??=false;s.bank.creditId??=0;s.grapes??={};s.grapeLots??=Object.entries(s.grapes).filter(([id,kg])=>kg>0).map(([id,kg])=>({id,kg,day:s.day,source:"Önceki stok"}));s.grapeWaste??={};s.offers??=[];s.offerSerial??=1;s.marketSeq??=1;s.tasting??=null;s.reputation??=0;s.wine??={};s.jobs??=[];s.orders??=[];s.logs??=[];s.unread??=0;s.land??=[];s.wineryName??="";s.customBlends??=[];s.barrels??=0;s.agingJobs??=[];s.agedWine??={};s.agedValue??={};s.grapeFilter??="available";s.oenologist??=null;s.nextStaffId??=1;s.payrollSpent??=0;s.lastPayroll??=0;s.vineyardTab??="plots";for(const p of s.land){p.workers??=[];p.workProgress??=(p.grape?Math.max(0,Math.min(29,30-((p.harvest??(s.day+30))-s.day))):0);if(p.workers.length===0&&p.grape)p.harvest=null;}s.unreadIds??=(s.orders||[]).slice(-s.unread).map(o=>o.id);s.unread=s.unreadIds.length;const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString("tr-TR"),city=n=>CITIES.find(c=>c.n===n)||CITIES[0],grape=id=>GRAPES.find(g=>g.id===id),level=()=>{let n=1;while(n<GRAPES[GRAPES.length-1].level&&s.xp>=Math.round(220*Math.pow(n,1.4)))n++;return n},capacity=()=>s.tanks*20,active=()=>s.jobs.reduce((n,j)=>n+j.kg,0);
+s.bank??={loan:null,misses:0,bankrupt:false,creditId:0};s.bank.loan??=null;s.bank.misses??=0;s.bank.bankrupt??=false;s.bank.creditId??=0;s.grapes??={};s.grapeLots??=Object.entries(s.grapes).filter(([id,kg])=>kg>0).map(([id,kg])=>({id,kg,day:s.day,source:"Önceki stok"}));s.grapeWaste??={};s.offers??=[];s.offerSerial??=1;s.marketSeq??=1;s.tasting??=null;s.reputation??=0;s.wine??={};s.jobs??=[];s.orders??=[];for(const o of s.orders){if(o&&Object.prototype.hasOwnProperty.call(o,"aged"))delete o.aged;}s.logs??=[];s.unread??=0;s.land??=[];s.wineryName??="";s.customBlends??=[];s.barrels??=0;s.agingJobs??=[];s.agedWine??={};s.agedValue??={};s.grapeFilter??="available";s.oenologist??=null;s.nextStaffId??=1;s.payrollSpent??=0;s.lastPayroll??=0;s.vineyardTab??="plots";for(const p of s.land){p.workers??=[];p.workProgress??=(p.grape?Math.max(0,Math.min(29,30-((p.harvest??(s.day+30))-s.day))):0);if(p.workers.length===0&&p.grape)p.harvest=null;}s.unreadIds??=(s.orders||[]).slice(-s.unread).map(o=>o.id);s.unread=s.unreadIds.length;const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString("tr-TR"),city=n=>CITIES.find(c=>c.n===n)||CITIES[0],grape=id=>GRAPES.find(g=>g.id===id),level=()=>{let n=1;while(n<GRAPES[GRAPES.length-1].level&&s.xp>=Math.round(220*Math.pow(n,1.4)))n++;return n},capacity=()=>s.tanks*20,active=()=>s.jobs.reduce((n,j)=>n+j.kg,0);
 
 const FIELD_STAFF=[
 {id:"seasonal",name:"Bağ İşçisi",unlock:4,wage:42,speed:1,yieldBonus:0,skills:"Budama, sulama ve hasat"},
@@ -611,19 +612,20 @@ function gameHour(){return s.day*24+s.hour}
 function orderQuota(){const n=level();return n<=10?3:n<=20?4:n<=25?5:6;}
 function orderInterval(){const n=level();return n<=10?6:n<=20?5:n<=25?4:3;}
 function nextOrderHours(){if(!s.built)return null;return Math.max(0,(Number.isFinite(s.nextOrderAt)?s.nextOrderAt:gameHour()+orderInterval())-gameHour());}
+
 function makeOrder(){
  if(!s.built||s.orders.length>=orderQuota())return false;
  const types=[...GRAPES,...BLENDS,...s.customBlends].filter(g=>g.level<=level());
  const custom=s.customBlends.filter(b=>b.level<=level());
  const g=custom.length&&(s.id+1)%4===0?custom[Math.floor((s.id+1)/4)%custom.length]:types[(s.day+s.orders.length+s.id)%types.length];
- const aged=s.barrels>0&&((s.id+1)%5===0);
- const qty=aged?7*(1+s.id%2):7*(1+s.id%3),price=Math.round(qty*((g.price||115)*2.1));
+ const qty=7*(1+s.id%3),price=Math.round(qty*((g.price||115)*2.1));
  const name=CUSTOMERS[s.id%CUSTOMERS.length],id=++s.id;
- s.orders.push({id,name,grape:g.id,qty,price,aged,deadline:gameHour()+(aged?24*21:96)});
+ // Customer orders the wine, not a particular production method: both stocks can fulfill it.
+ s.orders.push({id,name,grape:g.id,qty,price,deadline:gameHour()+96});
  if(!($("modalOverlay").classList.contains("open")&&s.view==="sales")){
   s.unreadIds.push(id);s.unread=s.unreadIds.length;toast("🔔 "+name+" yeni sipariş gönderdi!");
  }
- log(name+" "+qty+" şişe "+g.name+(aged?" (meşe olgunlaştırmalı)":"")+" istedi.");
+ log(name+" "+qty+" şişe "+g.name+" istedi. Çelik veya meşe stokundan teslim edilebilir.");
  return true;
 }
 function refreshExpiredOrders(){
@@ -645,34 +647,81 @@ function advanceOrderSchedule(){
  }
 }
 
-function payoutFor(o){
- const blendBonus=WINE(o.grape)?.needs?(oenologistProfile()?.blend||0):0;
- if(!o.aged)return Math.round(o.price*(1+blendBonus));
- const stock=s.agedWine[o.grape]||0;
- const quality=stock?((s.agedValue[o.grape]||stock*1.1)/stock):1.1;
- return Math.round(o.price*Math.max(1,Math.min(1.85,quality))*(1+blendBonus));
+
+function orderWineStock(o){
+ return {steel:Math.max(0,Math.floor(s.wine[o.grape]||0)),oak:Math.max(0,Math.floor(s.agedWine[o.grape]||0))};
+}
+function agedOrderPremium(o){
+ const stock=Math.max(0,s.agedWine[o.grape]||0),value=s.agedValue[o.grape];
+ const g=WINE(o.grape)||{oak:"medium"};
+ // Aged stock carries a weighted premium reflecting actual 7/14/28-day maturation.
+ const factor=stock>0&&Number.isFinite(value)&&value>0?value/stock:oakFactor(g,14)*(1+(oenologistProfile()?.oak||0));
+ return Math.min(1.85,Math.max(1.06,factor));
+}
+function unitOrderPrices(o){
+ const premium=WINE(o.grape)?.needs?(oenologistProfile()?.blend||0):0;
+ const steel=(o.price/o.qty)*(1+premium);
+ return {steel,oak:steel*agedOrderPremium(o)};
+}
+function payoutFor(o,method="steel",oakQty){
+ const price=unitOrderPrices(o);
+ if(method==="oak")return Math.round(price.oak*o.qty);
+ if(method==="mixed"){
+  const mature=Number.isInteger(oakQty)?oakQty:Math.min(orderWineStock(o).oak,o.qty);
+  return Math.round(price.oak*mature+price.steel*(o.qty-mature));
+ }
+ return Math.round(price.steel*o.qty);
+}
+function mixedOrderQuantities(o){
+ const stock=orderWineStock(o);
+ if(stock.steel+stock.oak<o.qty||stock.steel===0||stock.oak===0)return null;
+ const oak=Math.min(stock.oak,o.qty-1);
+ const steel=o.qty-oak;
+ if(steel<=0||steel>stock.steel)return null;
+ return {steel,oak};
 }
 function showSales(){
- $("content").innerHTML='<h2>Gelen Siparişler</h2><p class="muted small">Restoranlar ve otellerden gelen talepleri zamanında teslim et. Meşe olgunlaştırması isteyen müşteriler daha yüksek bedel öder.</p><div class="wine-chips order-overview"><div><small>Aktif sipariş kotası</small><strong>'+s.orders.length+' / '+orderQuota()+'</strong></div><div><small>Yeni sipariş sıklığı</small><strong>'+orderInterval()+' saatte bir</strong></div><div><small>Bir sonraki dönem</small><strong>'+nextOrderHours()+' saat</strong></div></div>'+
- (s.orders.length?s.orders.map(o=>'<div class="item"><div><h3>🍽️ '+escapeHtml(o.name)+'</h3><div class="muted small">'+o.qty+' şişe '+escapeHtml(WINE(o.grape)?.name||"Şarap")+(o.aged?' · 🪵 Meşede olgunlaştırılmış':'')+'</div><div class="muted small">Depoda '+(o.aged?(s.agedWine[o.grape]||0):(s.wine[o.grape]||0))+' şişe · Kalan '+Math.max(0,o.deadline-gameHour())+' saat</div><div class="cost" style="margin-top:7px">'+fmt(payoutFor(o))+' ₺'+(o.aged?'<small class="muted"> (fıçı kalite primi dahil)</small>':'')+'</div></div><button class="btn primary" '+((o.aged?(s.agedWine[o.grape]||0):(s.wine[o.grape]||0))<o.qty?'disabled':'')+' onclick="deliver('+o.id+')">Teslim et</button></div>').join(""):'<div class="hint">Yeni müşteri siparişleri oyun günü ilerledikçe gelir.</div>');
+ $("content").innerHTML='<h2>Gelen Siparişler</h2><p class="muted small">Müşteri şarabı ve miktarı belirler. Çelik tankta üretilen şarabı normal fiyatına, meşede olgunlaştırdığın şarabı olgunlaştırma primli fiyatına satabilirsin. Stokların bölünmüşse karma teslimat yapabilirsin.</p>'+
+ '<div class="wine-chips order-overview"><div><small>Aktif sipariş kotası</small><strong>'+s.orders.length+' / '+orderQuota()+'</strong></div><div><small>Yeni sipariş sıklığı</small><strong>'+orderInterval()+' saatte bir</strong></div><div><small>Bir sonraki dönem</small><strong>'+nextOrderHours()+' saat</strong></div></div>'+
+ (s.orders.length?s.orders.map(o=>{
+  const stock=orderWineStock(o),mix=mixedOrderQuantities(o);
+  const oakPremium=Math.round((agedOrderPremium(o)-1)*100);
+  return '<div class="wine-order"><div class="wine-order-title"><div><h3>🍽️ '+escapeHtml(o.name)+'</h3><div class="small muted">'+o.qty+' şişe '+escapeHtml(WINE(o.grape)?.name||"Şarap")+' istiyor</div></div><div class="small muted">⏳ '+Math.max(0,o.deadline-gameHour())+' saat kaldı</div></div>'+
+  '<div class="wine-order-options">'+
+  '<div class="wine-order-option"><div><strong>🍷 Çelik tank</strong><div class="muted small">Stok: '+stock.steel+' şişe</div><div class="muted small">Standart şarap</div></div><div class="wine-order-price">'+fmt(payoutFor(o,"steel"))+' ₺</div>'+
+  '<button class="btn primary full" '+(stock.steel<o.qty?'disabled':'')+' onclick="deliver('+o.id+',\'steel\')">Çelik stoktan sat</button></div>'+
+  '<div class="wine-order-option oak"><div><strong>🪵 Meşede olgunlaşmış</strong><div class="muted small">Stok: '+stock.oak+' şişe · +%'+oakPremium+'</div><div class="muted small">'+(stock.oak>0?'Mevcut fıçı olgunlaştırma primi':'14 günlük tahmini meşe primi')+'</div></div><div class="wine-order-price">'+fmt(payoutFor(o,"oak"))+' ₺</div>'+
+  '<button class="btn primary full" '+(stock.oak<o.qty?'disabled':'')+' onclick="deliver('+o.id+',\'oak\')">Meşe stoktan sat</button></div></div>'+
+  (mix?'<div class="wine-order-mixed"><div><b>🍷 + 🪵 Karma teslimat</b><div class="small muted">'+mix.steel+' çelik + '+mix.oak+' meşe · '+fmt(payoutFor(o,"mixed",mix.oak))+' ₺</div></div><button class="btn" onclick="deliver('+o.id+',\'mixed\')">Birlikte sat</button></div>':'')+
+  '</div>';
+ }).join(""):'<div class="hint">Henüz aktif sipariş yok. Bir sonraki müşteri talebi oyun saatine göre gelir.</div>');
 }
-function deliver(id){
+function deliver(id,method="steel"){
  refreshExpiredOrders();
  const o=s.orders.find(o=>o.id===id);
  if(!o){save();return toast("Bu siparişin süresi doldu. Liste yenilendi.")}
- const stock=o.aged?s.agedWine:s.wine;
- if((stock[o.grape]||0)<o.qty)return toast("Şarap stoğu yetersiz.");
- const payment=payoutFor(o);
- if(o.aged){
-  const quality=(s.agedValue[o.grape]||stock[o.grape]*1.1)/stock[o.grape];
-  s.agedValue[o.grape]=Math.max(0,(s.agedValue[o.grape]||stock[o.grape]*1.1)-o.qty*quality);
+ if(!["steel","oak","mixed"].includes(method))return toast("Teslimat seçimi geçersiz.");
+ const stock=orderWineStock(o),mix=method==="mixed"?mixedOrderQuantities(o):null;
+ const qtyOak=method==="oak"?o.qty:method==="mixed"?mix?.oak:0;
+ const qtySteel=method==="steel"?o.qty:method==="mixed"?mix?.steel:0;
+ if(!Number.isInteger(qtyOak)||!Number.isInteger(qtySteel)||qtyOak+qtySteel!==o.qty||
+   qtyOak>stock.oak||qtySteel>stock.steel)return toast("Bu teslimat için yeterli şarap stoğu yok.");
+ const total=payoutFor(o,method,qtyOak);
+ if(qtyOak){
+  const oldQty=s.agedWine[o.grape],previousValue=s.agedValue[o.grape]||oldQty*agedOrderPremium(o);
+  const avg=previousValue/oldQty;
+  s.agedWine[o.grape]=Math.max(0,oldQty-qtyOak);
+  s.agedValue[o.grape]=s.agedWine[o.grape]===0?0:Math.max(0,previousValue-qtyOak*avg);
  }
- stock[o.grape]-=o.qty;s.cash+=payment;s.xp+=25;
+ if(qtySteel)s.wine[o.grape]=Math.max(0,(s.wine[o.grape]||0)-qtySteel);
+ s.cash+=total;s.xp+=25;
  s.orders=s.orders.filter(x=>x.id!==id);
  s.unreadIds=s.unreadIds.filter(x=>x!==id);s.unread=s.unreadIds.length;
- s.reputation=Math.min(100,(s.reputation||0)+1);log(o.name+" siparişi teslim edildi: "+fmt(payment)+" ₺. İtibar +1.");
- save();toast("Sipariş teslim edildi!");
+ s.reputation=Math.min(100,(s.reputation||0)+1);
+ log(o.name+": "+o.qty+" şişe "+WINE(o.grape).name+" satıldı ("+qtySteel+" çelik, "+qtyOak+" meşe). Gelir: "+fmt(total)+" ₺. İtibar +1.");
+ save();toast("🍷 "+fmt(total)+" ₺ satış gerçekleşti.");
 }
+
 function hour(){
  if(s.bank.bankrupt)return;
  s.hour++;
