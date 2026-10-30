@@ -634,7 +634,10 @@ function pauseGame(){s.paused=!s.paused;s.updated=Date.now();save()}
 function tick(){let n=Date.now();if(s.paused){s.updated=n;return}let passed=Math.floor((n-s.updated)/5000);if(passed<=0)return;for(let i=0;i<Math.min(24,passed);i++)hour();s.updated=n-(passed<24?(n-s.updated)%5000:0);save()}
 s.lastLevelNotified??=level();
 if(s.built&&!Number.isFinite(s.nextOrderAt))s.nextOrderAt=gameHour()+orderInterval();
-tick();render();
+tick();
+ensureOffers();
+localStorage.setItem("winehouse-turkiye-v1",JSON.stringify(s));
+render();
 if(!s.built){$("panelHeading").textContent="Şehrini seç";$("modalOverlay").classList.add("open");$("modalOverlay").setAttribute("aria-hidden","false");}
 setInterval(tick,1000);
 </script></body></html>
