@@ -52,6 +52,7 @@ html,body{height:100%;overflow:hidden}body{background:#c7d8be;color:#26362f}
 .tasting-hero{display:flex;gap:15px;align-items:center;background:#e5efdf;border:1px solid #d9e5d5;border-radius:16px;padding:18px;margin:14px 0}.tasting-hero h3{margin:0 0 6px}.tasting-home{width:75px;height:75px;background:#f9f3de;border-radius:17px;display:grid;place-items:center;font-size:44px}#content .seg{display:flex;gap:6px;flex-wrap:wrap}#content .seg button{flex:1;min-width:112px}@media(max-width:500px){#content .seg button{font-size:12px;padding:8px 3px}}
 .bankruptcy-overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:18px;background:#15281ddb;backdrop-filter:blur(5px)}.bankruptcy-overlay.visible{display:flex}.bankruptcy-window{max-width:440px;width:100%;border-radius:22px;background:#fffcf4;padding:28px;text-align:center;box-shadow:0 25px 90px #0006}.bankruptcy-window h2{font:500 31px Georgia,serif;color:#704050}.bankruptcy-window .row{text-align:left}.bankruptcy-window .btn{margin-top:18px}.bankruptcy-symbol{font-size:60px;filter:grayscale(1)}.bank-alert{position:absolute;top:-5px;right:0;min-width:18px;height:18px;background:#c84e54;color:#fff;border-radius:20px;font-size:12px;font-weight:800;display:grid;place-items:center;border:2px solid #fff}.bank-alert.hidden{display:none}.bank-warning{margin-top:16px;background:#fff0e3;border:1px solid #e7ba9f;color:#844832}.bank-loan{padding:16px;border:1px solid #e2e1d9;border-radius:16px;background:#fffcf5;margin:17px 0}.bank-loan h3{margin-top:0}.bank-offer{display:flex;justify-content:space-between;align-items:center;gap:15px;background:#fff;border:1px solid #e4e7de;border-radius:15px;padding:14px;margin:10px 0}.bank-offer h3{font-size:16px;margin:0 0 5px}.bank-sub{font-size:12px;color:#68736d;margin-top:8px}.bank-apply{display:flex;flex-direction:column;align-items:flex-end;gap:7px}.bank-apply strong{color:#3b6650;white-space:nowrap;font-size:18px}@media(max-width:570px){.bank-offer{flex-direction:column;align-items:stretch}.bank-apply{flex-direction:row;justify-content:space-between}}
 .wine-order{background:#fffdf8;border:1px solid #e6e8dd;border-radius:17px;padding:16px;margin:13px 0}.wine-order-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.wine-order-title h3{margin:0 0 5px}.wine-order-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.wine-order-option{background:#fff;border:1px solid #e4e8e1;border-radius:12px;padding:13px;display:flex;flex-direction:column;gap:10px;justify-content:space-between}.wine-order-option.oak{background:#fdf9f3;border-color:#e9d9c5}.wine-order-option strong{font-size:14px}.wine-order-price{font-weight:800;font-size:19px;color:#385b45}.wine-order-option.oak .wine-order-price{color:#783c4b}.wine-order-option .btn:disabled{opacity:.45}.wine-order-mixed{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f2f5ed;border-radius:12px;padding:12px 14px;margin-top:11px}.wine-order-mixed .btn{flex-shrink:0}@media(max-width:510px){.wine-order-options{grid-template-columns:1fr}.wine-order-title{flex-direction:column;gap:3px}.wine-order-option{gap:6px}}
+.daily-grape-list{display:flex;flex-direction:column;gap:10px;margin:15px 0}.daily-grape-card{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(105px,.55fr) auto;align-items:center;gap:14px;padding:15px;border:1px solid #e5e9e2;border-radius:15px;background:#fffefb}.daily-grape-card.locked{opacity:.72}.daily-grape-title{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:7px}.daily-grape-title strong{font-size:16px;color:#2a4838}.grape-lock{font-size:11px;color:#78566a;background:#f4e9eb;padding:4px 7px;border-radius:7px}.daily-grape-price{text-align:right;white-space:nowrap}.daily-price-main{font-size:22px;color:#3c654e;font-weight:750}.daily-price-main small{font-size:11px;font-weight:400;color:#6f8075}.daily-price-move{font-size:11px;padding-top:4px}.daily-price-move.up{color:#ae594e}.daily-price-move.down{color:#427b52}.daily-price-move.flat{color:#758076}.daily-grape-actions{display:flex;flex-direction:column;gap:6px;min-width:144px}.daily-grape-actions .btn{font-size:12px;padding:8px 9px;white-space:nowrap}@media(max-width:780px){.daily-grape-card{grid-template-columns:1fr auto}.daily-grape-info{grid-column:1}.daily-grape-price{grid-column:2;grid-row:1}.daily-grape-actions{grid-column:1/-1;flex-direction:row}.daily-grape-actions .btn{flex:1;min-width:0}}@media(max-width:460px){.daily-grape-card{gap:9px;padding:11px}.daily-grape-info .small{font-size:11px}.daily-price-main{font-size:17px}.daily-grape-actions{flex-direction:column}}
 </style></head><body>
 <div class="world" aria-label="Pastel bağlar, Türkiye köyleri ve şaraphane illüstrasyonu"></div>
 <header class="topbar"><div class="brand">🍇 Winehouse</div><div class="fill"></div><span class="topinfo"><b id="money">35.000</b> ₺</span><span class="topdivider"></span><span class="topinfo">★ <b id="level">1</b>. Seviye</span><span class="topdivider"></span><span class="topinfo">🏵️ <b id="rep">0</b> İtibar</span><span class="topdivider"></span><span class="topinfo">☀ <b id="clock">1. Gün, 08:00</b></span><button class="btn small clockpause" aria-label="Zamanı durdur veya devam ettir" id="pause" onclick="pauseGame()">⏸</button></header>
@@ -79,9 +80,9 @@ html,body{height:100%;overflow:hidden}body{background:#c7d8be;color:#26362f}
 const CITIES=[{n:"İzmir",lat:38.42,lon:27.14,fee:12500,x:18,y:61},{n:"Denizli",lat:37.77,lon:29.09,fee:10500,x:29,y:67},{n:"Tekirdağ",lat:40.98,lon:27.51,fee:12000,x:20,y:34},{n:"Ankara",lat:39.92,lon:32.85,fee:9500,x:49,y:43},{n:"Nevşehir",lat:38.62,lon:34.71,fee:9000,x:59,y:57},{n:"Tokat",lat:40.31,lon:36.55,fee:8200,x:72,y:42},{n:"Elazığ",lat:38.68,lon:39.22,fee:8000,x:81,y:57},{n:"Diyarbakır",lat:37.91,lon:40.24,fee:8300,x:87,y:66},{n:"Muğla",lat:37.22,lon:28.36,fee:11000,x:23,y:76},{n:"Manisa",lat:38.61,lon:27.43,fee:9600,x:22,y:55},{n:"Çanakkale",lat:40.15,lon:26.41,fee:9600,x:12,y:41},{n:"Kırklareli",lat:41.73,lon:27.22,fee:9600,x:18,y:22},{n:"Kırıkkale",lat:39.85,lon:33.51,fee:9600,x:53,y:44},{n:"Edirne",lat:41.67,lon:26.56,fee:9600,x:13,y:25}];
 const GRAPES=[{"id":"okuz","name":"Öküzgözü","origin":"Elazığ","price":54,"level":1,"style":"Kırmızı","category":"Yerli","oak":"medium","desc":"Meyvemsi, canlı asiditeli."},{"id":"cal","name":"Çalkarası","origin":"Denizli","price":44,"level":1,"style":"Roze","category":"Yerli","oak":"light","desc":"Çilek, ahududu; roze için uygun."},{"id":"bogaz","name":"Boğazkere","origin":"Diyarbakır","price":49,"level":2,"style":"Kırmızı","category":"Yerli","oak":"long","desc":"Güçlü tanen; uzun yıllandırmaya elverişli."},{"id":"kalecik","name":"Kalecik Karası","origin":"Ankara","price":56,"level":3,"style":"Kırmızı","category":"Yerli","oak":"light","desc":"Zarif gövde, kırmızı meyve."},{"id":"emir","name":"Emir","origin":"Nevşehir","price":46,"level":4,"style":"Beyaz","category":"Yerli","oak":"light","desc":"Mineral, yüksek asitli beyaz."},{"id":"narince","name":"Narince","origin":"Tokat","price":51,"level":5,"style":"Beyaz","category":"Yerli","oak":"medium","desc":"Dengeli, narenciye ve elma."},{"id":"cabernet","name":"Cabernet Sauvignon","origin":"İzmir","price":69,"level":6,"style":"Kırmızı","category":"Uluslararası","oak":"long","desc":"Tanenli, koyu meyveli."},{"id":"merlot","name":"Merlot","origin":"Tekirdağ","price":63,"level":7,"style":"Kırmızı","category":"Uluslararası","oak":"medium","desc":"Yumuşak tanen, erik."},{"id":"syrah","name":"Syrah","origin":"Denizli","price":65,"level":8,"style":"Kırmızı","category":"Uluslararası","oak":"long","desc":"Karabiber ve koyu meyveler."},{"id":"chardonnay","name":"Chardonnay","origin":"Denizli","price":62,"level":9,"style":"Beyaz","category":"Uluslararası","oak":"medium","desc":"Dolgun beyaz; meşeye uygun."},{"id":"sauvignon","name":"Sauvignon Blanc","origin":"Çanakkale","price":61,"level":10,"style":"Beyaz","category":"Uluslararası","oak":"light","desc":"Canlı asit, otsu aromalar."},{"id":"papaz","name":"Papazkarası","origin":"Kırklareli","price":57,"level":11,"style":"Kırmızı","category":"Yerli","oak":"medium","desc":"Meyvemsi Trakya kırmızısı."},{"id":"bornova","name":"Bornova Misketi","origin":"İzmir","price":58,"level":12,"style":"Beyaz","category":"Yerli","oak":"light","desc":"Çiçeksi, misket aromalı."},{"id":"sultaniye","name":"Sultaniye","origin":"Manisa","price":38,"level":13,"style":"Beyaz","category":"Yerli","oak":"light","desc":"Hafif, meyvemsi beyaz."},{"id":"yapincak","name":"Yapıncak","origin":"Tekirdağ","price":52,"level":14,"style":"Beyaz","category":"Yerli","oak":"light","desc":"Elma, armut ve ayva."},{"id":"karasakiz","name":"Karasakız","origin":"Çanakkale","price":59,"level":15,"style":"Kırmızı","category":"Yerli","oak":"medium","desc":"Bozcaada kırmızısı."},{"id":"karalahna","name":"Karalahna","origin":"Çanakkale","price":66,"level":16,"style":"Kırmızı","category":"Yerli","oak":"long","desc":"Koyu renkli, dolgun."},{"id":"vasilaki","name":"Vasilaki","origin":"Çanakkale","price":62,"level":17,"style":"Beyaz","category":"Yerli","oak":"light","desc":"Ada beyazı, ferah."},{"id":"adakarasi","name":"Adakarası","origin":"Çanakkale","price":61,"level":18,"style":"Kırmızı","category":"Yerli","oak":"medium","desc":"Marmara adaları kökenli."},{"id":"pinot","name":"Pinot Noir","origin":"Denizli","price":74,"level":19,"style":"Kırmızı","category":"Uluslararası","oak":"light","desc":"İnce gövde, kırmızı meyve."},{"id":"cabfranc","name":"Cabernet Franc","origin":"Denizli","price":70,"level":20,"style":"Kırmızı","category":"Uluslararası","oak":"medium","desc":"Otsu, dengeli tanen."},{"id":"petitverdot","name":"Petit Verdot","origin":"Denizli","price":76,"level":21,"style":"Kırmızı","category":"Uluslararası","oak":"long","desc":"Koyu renk, yoğun yapı."},{"id":"semillon","name":"Sémillon","origin":"Tekirdağ","price":59,"level":22,"style":"Beyaz","category":"Uluslararası","oak":"medium","desc":"Yuvarlak, dolgun beyaz."},{"id":"viognier","name":"Viognier","origin":"Denizli","price":72,"level":23,"style":"Beyaz","category":"Uluslararası","oak":"medium","desc":"Kayısı, çiçeksi."},{"id":"carignan","name":"Carignan","origin":"İzmir","price":57,"level":24,"style":"Kırmızı","category":"Uluslararası","oak":"medium","desc":"Akdeniz karakteri, baharat."},{"id":"alicante","name":"Alicante Bouschet","origin":"İzmir","price":60,"level":25,"style":"Kırmızı","category":"Uluslararası","oak":"long","desc":"Yoğun renk, güçlü meyve."},{"id":"kosetevek","name":"Kösetevek","origin":"Elazığ","price":68,"level":26,"style":"Kırmızı","category":"Yerli","oak":"medium","desc":"Yerel Doğu Anadolu kırmızısı."},{"id":"hasandede","name":"Hasandede","origin":"Kırıkkale","price":55,"level":27,"style":"Beyaz","category":"Yerli","oak":"light","desc":"İç Anadolu yerel beyazı."},{"id":"malbec","name":"Malbec","origin":"Denizli","price":73,"level":28,"style":"Kırmızı","category":"Uluslararası","oak":"long","desc":"Koyu meyve, dolgun gövde."},{"id":"grenache","name":"Grenache","origin":"İzmir","price":63,"level":29,"style":"Kırmızı","category":"Uluslararası","oak":"medium","desc":"Sıcak iklim, kırmızı meyve."},{"id":"tempranillo","name":"Tempranillo","origin":"Denizli","price":71,"level":30,"style":"Kırmızı","category":"Uluslararası","oak":"long","desc":"Orta dolgunluk, erik."},{"id":"cinsault","name":"Cinsault","origin":"Tekirdağ","price":56,"level":31,"style":"Kırmızı","category":"Uluslararası","oak":"light","desc":"Hafif, ferah kırmızı."},{"id":"gamay","name":"Gamay","origin":"Tekirdağ","price":59,"level":32,"style":"Kırmızı","category":"Uluslararası","oak":"light","desc":"Meyvemsi, hafif."},{"id":"zinfandel","name":"Zinfandel","origin":"Denizli","price":79,"level":33,"style":"Kırmızı","category":"Uluslararası","oak":"long","desc":"Olgun meyve, dolgun."}];
 const CUSTOMERS=["Kıyı Restoran","Bağ Evi Bistro","Meydan Otel","Eski Çarşı Lokantası","Sahil Tadım Evi","Şehir Kulübü"];
-const fresh=()=>({city:"İzmir",cash:35000,day:1,hour:8,paused:false,updated:Date.now(),built:false,tanks:1,xp:0,grapes:{},wine:{},jobs:[],orders:[],unread:0,land:[],logs:["Hoş geldin. Üretim şehrini seç."],view:"market",id:0,wineryName:"",customBlends:[],barrels:0,agingJobs:[],agedWine:{},agedValue:{},grapeFilter:"available",oenologist:null,nextStaffId:1,payrollSpent:0,lastPayroll:0,vineyardTab:"plots",nextOrderAt:null,bank:{loan:null,misses:0,bankrupt:false,creditId:0},grapeLots:[],grapeWaste:{},offers:[],offerSerial:1,marketSeq:1,tasting:null,reputation:0});
+const fresh=()=>({city:"İzmir",cash:35000,day:1,hour:8,paused:false,updated:Date.now(),built:false,tanks:1,xp:0,grapes:{},wine:{},jobs:[],orders:[],unread:0,land:[],logs:["Hoş geldin. Üretim şehrini seç."],view:"market",id:0,wineryName:"",customBlends:[],barrels:0,agingJobs:[],agedWine:{},agedValue:{},oenologist:null,nextStaffId:1,payrollSpent:0,lastPayroll:0,vineyardTab:"plots",nextOrderAt:null,bank:{loan:null,misses:0,bankrupt:false,creditId:0},grapeLots:[],grapeWaste:{},tasting:null,reputation:0});
 let s;try{s=JSON.parse(localStorage.getItem("winehouse-turkiye-v1"))||fresh()}catch(e){s=fresh()}
-s.bank??={loan:null,misses:0,bankrupt:false,creditId:0};s.bank.loan??=null;s.bank.misses??=0;s.bank.bankrupt??=false;s.bank.creditId??=0;s.grapes??={};s.grapeLots??=Object.entries(s.grapes).filter(([id,kg])=>kg>0).map(([id,kg])=>({id,kg,day:s.day,source:"Önceki stok"}));s.grapeWaste??={};s.offers??=[];s.offerSerial??=1;s.marketSeq??=1;s.tasting??=null;s.reputation??=0;s.wine??={};s.jobs??=[];s.orders??=[];for(const o of s.orders){if(o&&Object.prototype.hasOwnProperty.call(o,"aged"))delete o.aged;}s.logs??=[];s.unread??=0;s.land??=[];s.wineryName??="";s.customBlends??=[];s.barrels??=0;s.agingJobs??=[];s.agedWine??={};s.agedValue??={};s.grapeFilter??="available";s.oenologist??=null;s.nextStaffId??=1;s.payrollSpent??=0;s.lastPayroll??=0;s.vineyardTab??="plots";for(const p of s.land){p.workers??=[];p.workProgress??=(p.grape?Math.max(0,Math.min(29,30-((p.harvest??(s.day+30))-s.day))):0);if(p.workers.length===0&&p.grape)p.harvest=null;}s.unreadIds??=(s.orders||[]).slice(-s.unread).map(o=>o.id);s.unread=s.unreadIds.length;const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString("tr-TR"),city=n=>CITIES.find(c=>c.n===n)||CITIES[0],grape=id=>GRAPES.find(g=>g.id===id),level=()=>{let n=1;while(n<GRAPES[GRAPES.length-1].level&&s.xp>=Math.round(220*Math.pow(n,1.4)))n++;return n},capacity=()=>s.tanks*20,active=()=>s.jobs.reduce((n,j)=>n+j.kg,0);
+s.bank??={loan:null,misses:0,bankrupt:false,creditId:0};s.bank.loan??=null;s.bank.misses??=0;s.bank.bankrupt??=false;s.bank.creditId??=0;s.grapes??={};s.grapeLots??=Object.entries(s.grapes).filter(([id,kg])=>kg>0).map(([id,kg])=>({id,kg,day:s.day,source:"Önceki stok"}));s.grapeWaste??={};delete s.offers;delete s.offerSerial;delete s.marketSeq;delete s.grapeFilter;s.tasting??=null;s.reputation??=0;s.wine??={};s.jobs??=[];s.orders??=[];for(const o of s.orders){if(o&&Object.prototype.hasOwnProperty.call(o,"aged"))delete o.aged;}s.logs??=[];s.unread??=0;s.land??=[];s.wineryName??="";s.customBlends??=[];s.barrels??=0;s.agingJobs??=[];s.agedWine??={};s.agedValue??={};s.oenologist??=null;s.nextStaffId??=1;s.payrollSpent??=0;s.lastPayroll??=0;s.vineyardTab??="plots";for(const p of s.land){p.workers??=[];p.workProgress??=(p.grape?Math.max(0,Math.min(29,30-((p.harvest??(s.day+30))-s.day))):0);if(p.workers.length===0&&p.grape)p.harvest=null;}s.unreadIds??=(s.orders||[]).slice(-s.unread).map(o=>o.id);s.unread=s.unreadIds.length;const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString("tr-TR"),city=n=>CITIES.find(c=>c.n===n)||CITIES[0],grape=id=>GRAPES.find(g=>g.id===id),level=()=>{let n=1;while(n<GRAPES[GRAPES.length-1].level&&s.xp>=Math.round(220*Math.pow(n,1.4)))n++;return n},capacity=()=>s.tanks*20,active=()=>s.jobs.reduce((n,j)=>n+j.kg,0);
 
 const FIELD_STAFF=[
 {id:"seasonal",name:"Bağ İşçisi",unlock:4,wage:42,speed:1,yieldBonus:0,skills:"Budama, sulama ve hasat"},
@@ -313,34 +314,26 @@ function restartGame(){if(!confirm("Tüm Winehouse ilerlemesini silip yeniden ba
 
 
 
+
 const SUPPLIERS=["Güney Yamaç Bağları","Kızıltepe Üzümcülük","Kavaklı Kooperatifi","Taşlıdere Aile Bağı","Günışığı Bağcılık","Yel Değirmeni Üreticileri","Çınaraltı Bağları","Akpınar Kooperatifi","Kiremitli Bağ","Dört Mevsim Üzümcülük"];
-const OFFER_REGIONS={
-"Elazığ":["Elazığ","Diyarbakır","Tokat"],"Diyarbakır":["Diyarbakır","Elazığ","Tokat"],
-"Denizli":["Denizli","Muğla","Manisa"],"Ankara":["Ankara","Kırıkkale","Nevşehir"],
-"Nevşehir":["Nevşehir","Ankara","Kırıkkale"],"Tokat":["Tokat","Elazığ","Ankara"],
-"İzmir":["İzmir","Manisa","Muğla"],"Tekirdağ":["Tekirdağ","Kırklareli","Edirne"],
-"Çanakkale":["Çanakkale","Tekirdağ","İzmir"],"Kırklareli":["Kırklareli","Edirne","Tekirdağ"],
-"Manisa":["Manisa","İzmir","Denizli"],"Kırıkkale":["Kırıkkale","Ankara","Nevşehir"],
-"Muğla":["Muğla","Denizli","İzmir"],"Edirne":["Edirne","Kırklareli","Tekirdağ"]
-};
-function quoteOffer(o,kg){const v=grape(o.grape),region=city(o.origin),distance=km(region,city(s.city));const freight=Math.round((60+distance*.22)*kg/10);return{goods:o.price*kg,freight,total:o.price*kg+freight,km:distance}}
-function makeOffer(id,slot){
- const g=grape(id),seq=s.marketSeq++,regions=OFFER_REGIONS[g.origin]||[g.origin,"İzmir","Denizli"];
- const origin=regions[slot%regions.length];
- const swing=[.83,.98,1.13,.91,1.07,.78,1.18,.95][(seq+slot+g.level)%8];
- const price=Math.max(9,Math.round(g.price*swing*(.97+((seq%5)*.015))));
- return{id:s.offerSerial++,grape:id,origin,producer:SUPPLIERS[(seq+slot+g.level)%SUPPLIERS.length],price,expires:gameHour()+[6,9,12][slot%3],slot};
+function grapeSupplier(g){
+ const n=GRAPES.findIndex(x=>x.id===g.id);
+ return {name:SUPPLIERS[(n+g.level)%SUPPLIERS.length],city:g.origin};
 }
-function ensureOffers(){
- if(!s.built)return;
- const accessible=GRAPES.filter(g=>g.level<=level()+1);
- const allowed=new Set(accessible.map(g=>g.id));
- s.offers=s.offers.filter(o=>o.expires>gameHour()&&allowed.has(o.grape)&&grape(o.grape));
- for(const g of accessible){
-  const slots=new Set(s.offers.filter(o=>o.grape===g.id).map(o=>o.slot));
-  for(let slot=0;slot<3;slot++)if(!slots.has(slot))s.offers.push(makeOffer(g.id,slot));
- }
+function dailyGrapePrice(g,day=s.day){
+ // Each variety retains its own base price. Per-day phase is stable across reloads.
+ // The modulo has a nonzero daily step, so no grape stays at the same price two days in a row.
+ const ordinal=GRAPES.findIndex(x=>x.id===g.id);
+ const phase=(day*7+ordinal*5+g.level*3)%13-6;
+ const multiplier=g.price>=75?2:1;
+ return Math.max(9,g.price+phase*multiplier);
 }
+function dailyGrapeQuote(g,kg,day=s.day){
+ const supplier=grapeSupplier(g),price=dailyGrapePrice(g,day),distance=km(city(supplier.city),city(s.city));
+ const goods=price*kg,freight=Math.round((60+distance*.22)*kg/10);
+ return {price,goods,freight,total:goods+freight,km:distance,origin:supplier.city,producer:supplier.name,day};
+}
+
 function addGrapeLot(id,kg,source){
  if(!grape(id)||kg<=0)return;
  s.grapes[id]=Math.round(((s.grapes[id]||0)+kg)*100)/100;
@@ -377,39 +370,43 @@ function applyGrapeSpoilage(){
  if(Object.keys(spoiled).length)log("🍇 Depo firesi: "+Object.entries(spoiled).map(([id,v])=>(grape(id)?.name||id)+" "+v.toFixed(2)+" kg").join(", ")+".");
 }
 
-function chooseGrapeFilter(v){s.grapeFilter=["available","local","international","all"].includes(v)?v:"available";save()}
 
 function showMarket(){
- ensureOffers();
- const view=s.grapeFilter||"available";
- const options=[["available","Açık çeşitler ve sıradaki"],["local","Yerli üzümler"],["international","Uluslararası üzümler"],["all","Tüm çeşitler"]];
- const visible=GRAPES.filter(g=>view==="all"||(view==="available"?g.level<=level()+1:view==="local"?g.category==="Yerli":g.category==="Uluslararası"));
+ const visible=GRAPES.filter(g=>g.level<=level()+1);
  const next=GRAPES.find(g=>g.level>level());
- $("content").innerHTML='<h2>🍇 Üzüm Pazarı</h2><p class="muted small">Her üzüm için farklı şehirlerden 3 üretici teklifi. Fiyat, taşıma bedeli ve teklif süresi değişir. Uygun fiyata stokla, ancak bekleyen üzümde zamanla hafif fire oluşur. Üretici adları oyuna özel kurgusaldır.</p>'+
- '<div class="row"><span>Seviye '+level()+' · Açık '+GRAPES.filter(g=>g.level<=level()).length+' üzüm</span><b>'+(next?'Sonraki: '+next.name:'Tüm çeşitler açık')+'</b></div>'+
- '<label class="input-label" for="grapeFilter">Pazar filtresi</label><select id="grapeFilter" class="name-input" onchange="chooseGrapeFilter(this.value)">'+options.map(([v,label])=>'<option value="'+v+'" '+(v===view?'selected':'')+'>'+label+'</option>').join('')+'</select>'+
- '<div class="market-offers">'+visible.map(g=>{
- const locked=level()<g.level;
- const offers=s.offers.filter(o=>o.grape===g.id).sort((a,b)=>quoteOffer(a,10).total-quoteOffer(b,10).total);
- const min=Math.min(...offers.map(o=>quoteOffer(o,10).total));
- return '<section class="offer-grape"><div class="offer-heading"><div><h3>🍇 '+g.name+' '+(locked?'🔒':'')+'</h3><span class="muted small">'+g.category+' · '+g.style+' · Stok: '+(s.grapes[g.id]||0).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})+' kg</span></div><div class="small">'+(locked?'Seviye '+g.level:'En ucuz 10 kg '+fmt(min)+' ₺')+'</div></div>'+
- (locked?'<div class="hint">Bu üzüm seviye '+g.level+' düzeyinde açılır.</div>':
- offers.map(o=>{const q=quoteOffer(o,10),discount=q.total===min;return '<div class="offer-row"><div class="offer-info"><b>'+escapeHtml(o.producer)+'</b>'+(discount?'<span class="offer-deal">Uygun teklif</span>':'')+
- '<div class="small muted">'+o.origin+' · '+fmt(q.km)+' km · '+fmt(o.price)+' ₺/kg · Nakliye '+fmt(q.freight)+' ₺</div>'+
- '<div class="small muted">⏳ '+(o.expires-gameHour())+' oyun saati kaldı</div></div><div class="offer-actions"><strong>'+fmt(q.total)+' ₺ <small>/ 10 kg</small></strong>'+
- '<div><button class="btn" '+(s.cash<q.total?'disabled':'')+' onclick="buyOffer('+o.id+',10)">10 kg</button><button class="btn primary" '+(s.cash<quoteOffer(o,20).total?'disabled':'')+' onclick="buyOffer('+o.id+',20)">20 kg</button></div></div></div>'}).join(""))+'</section>';
- }).join("")+'</div>'+
- '<div class="hint">Depo firesi: '+Object.values(s.grapeWaste).reduce((a,b)=>a+b,0).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})+' kg toplam. İlk gün fire yok; sonraki günlerde küçük kayıplar oluşur. Bağından gelen üzümler de bekledikçe fire verebilir.</div>';
+ const totalWaste=Object.values(s.grapeWaste).reduce((a,b)=>a+b,0).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2});
+ $("content").innerHTML='<h2>🍇 Üzüm Pazarı</h2>'+
+ '<p class="muted small">Her üzümün tek bir üreticisi ve kendine özgü günlük fiyatı var. Fiyatlar her oyun günü 00:00’da değişir. Fiyat uygunken üzüm stoklayabilir, ancak depoda uzun süre kalan üzümde az miktarda fire yaşayabilirsin.</p>'+
+ '<div class="row"><span>☀️ '+s.day+'. oyun günü · '+GRAPES.filter(g=>g.level<=level()).length+' çeşit açık</span><b>'+(next?'Sıradaki: '+next.name:'Tüm üzüm çeşitleri açık')+'</b></div>'+
+ '<div class="daily-grape-list">'+visible.map(g=>{
+  const locked=g.level>level(),q10=dailyGrapeQuote(g,10),q20=dailyGrapeQuote(g,20);
+  const yesterday=dailyGrapePrice(g,Math.max(0,s.day-1));
+  const delta=q10.price-yesterday;
+  const change=delta>0?'↑ '+fmt(delta)+' ₺':delta<0?'↓ '+fmt(-delta)+' ₺':'—';
+  const signal=delta>0?'up':delta<0?'down':'flat';
+  const stock=(s.grapes[g.id]||0).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  return '<div class="daily-grape-card'+(locked?' locked':'')+'"><div class="daily-grape-info"><div class="daily-grape-title"><strong>🍇 '+escapeHtml(g.name)+'</strong>'+(locked?'<span class="grape-lock">🔒 Seviye '+g.level+'</span>':'')+'</div>'+
+  '<div class="small muted">'+escapeHtml(g.category)+' · '+escapeHtml(g.style)+' · '+escapeHtml(q10.producer)+' / '+escapeHtml(q10.origin)+'</div>'+
+  '<div class="small muted">Depoda: '+stock+' kg · Nakliye (10 kg): '+fmt(q10.freight)+' ₺</div></div>'+
+  '<div class="daily-grape-price"><div class="daily-price-main">'+fmt(q10.price)+' ₺<small> / kg</small></div>'+
+  '<div class="daily-price-move '+signal+'">'+change+' / dün</div></div>'+
+  '<div class="daily-grape-actions">'+
+  '<button class="btn" '+(locked||s.cash<q10.total?'disabled':'')+' onclick="buyGrapeDaily(\''+g.id+'\',10)">10 kg · '+fmt(q10.total)+' ₺</button>'+
+  '<button class="btn primary" '+(locked||s.cash<q20.total?'disabled':'')+' onclick="buyGrapeDaily(\''+g.id+'\',20)">20 kg · '+fmt(q20.total)+' ₺</button></div></div>';
+ }).join('')+'</div>'+
+ '<div class="hint">Depo firesi: '+totalWaste+' kg. İlk gün fire olmaz; bekletme süresi uzadıkça küçük kayıplar gerçekleşir. Üretici isimleri oyun için kurgusaldır.</div>';
 }
-function buyOffer(id,kg){
- ensureOffers();
- const o=s.offers.find(x=>x.id===id);
- if(!s.built||!o||o.expires<=gameHour()||level()<(grape(o.grape)?.level||100)||![10,20].includes(kg))return toast("Teklifin süresi dolmuş veya çeşit kilitli.");
- const q=quoteOffer(o,kg);
- if(s.cash<q.total)return toast("Yeterli paran bulunmuyor.");
- s.cash-=q.total;addGrapeLot(o.grape,kg,o.producer);
- s.xp+=4;log(o.producer+" ("+o.origin+") üzerinden "+grape(o.grape).name+" "+kg+" kg alındı. Nakliye "+fmt(q.freight)+" ₺.");
- save();toast("🍇 "+kg+" kg üzüm depoya eklendi.");
+function buyGrapeDaily(id,kg){
+ const g=grape(id);
+ if(!s.built||!g||g.level>level()||![10,20].includes(kg))return toast("Bu üzüm henüz alınamıyor.");
+ const quote=dailyGrapeQuote(g,kg);
+ if(s.cash<quote.total)return toast("Yeterli paran bulunmuyor.");
+ s.cash-=quote.total;
+ addGrapeLot(g.id,kg,quote.producer);
+ s.xp+=4;
+ log(quote.producer+" ("+quote.origin+"): "+g.name+" "+kg+" kg, "+fmt(quote.price)+" ₺/kg ve "+fmt(quote.freight)+" ₺ nakliye.");
+ save();
+ toast("🍇 "+kg+" kg "+g.name+" depoya eklendi.");
 }
 
 const TANK_KG=20;
@@ -754,8 +751,7 @@ function hour(){
   s.xp+=10;log((WINE(j.id)?.name||"Şarap")+" meşe olgunlaştırmasını tamamladı ("+j.days+" gün).");
  }
  refreshExpiredOrders();
- // Süresi dolan üretici teklifleri yenilenir, yeni müşteri talebi açılır.
- if(s.built)ensureOffers();
+ // Günlük üzüm fiyatları oyun gününden türetilir; burada yenileme gerekmez.
  advanceOrderSchedule();
  processLoanDue();
 }
@@ -764,7 +760,6 @@ function tick(){let n=Date.now();if(s.paused||s.bank.bankrupt){s.updated=n;retur
 s.lastLevelNotified??=level();
 if(s.built&&!Number.isFinite(s.nextOrderAt))s.nextOrderAt=gameHour()+orderInterval();
 tick();
-ensureOffers();
 localStorage.setItem("winehouse-turkiye-v1",JSON.stringify(s));
 render();
 if(!s.built){$("panelHeading").textContent="Şehrini seç";$("modalOverlay").classList.add("open");$("modalOverlay").setAttribute("aria-hidden","false");}
