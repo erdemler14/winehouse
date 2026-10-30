@@ -81,6 +81,7 @@ const FIELD_STAFF=[
 {id:"trained",name:"Deneyimli Bağ İşçisi",unlock:6,wage:59,speed:1.3,yieldBonus:.12,skills:"Verimli bağ bakımı ve ürün seçimi"},
 {id:"master",name:"Bağ Ustası",unlock:10,wage:84,speed:1.65,yieldBonus:.25,skills:"Rekolte yönetimi ve seçici hasat"}
 ];
+const WORKER_NAMES=["Mehmet","Ayşe","Hasan","Zeynep","Emre","Fatma","Murat","Elif","Ali","Derya","Hüseyin","Selma"];
 const OENOLOGISTS=[
 {id:"junior",name:"Selin Yılmaz",title:"Genç Önolog",unlock:3,wage:210,ferment:.08,blend:.02,oak:.02,skills:"Fermantasyon takibi"},
 {id:"blender",name:"Deniz Arslan",title:"Kupaj Önoloğu",unlock:6,wage:360,ferment:.14,blend:.10,oak:.04,skills:"Kupaj dengesi ve duyusal analiz"},
@@ -103,7 +104,7 @@ function hireFieldWorker(i,id){
  if(p.workers.length>=slots)return toast("Bu bağın personel kapasitesi dolu.");
  const wage=dailyWage(profile);
  if(s.cash<wage*3)return toast("En az üç günlük yevmiye karşılığı nakit gerekli.");
- p.workers.push({id:s.nextStaffId++,profile:id,hiredDay:s.day});
+ const staffId=s.nextStaffId++;p.workers.push({id:staffId,profile:id,name:WORKER_NAMES[(staffId-1)%WORKER_NAMES.length],hiredDay:s.day});
  updateHarvestEstimate(p);s.vineyardTab="staff";
  log("Bağ "+(i+1)+" için "+profile.name+" işe alındı (günlük "+fmt(wage)+" ₺).");
  save();toast("👷 "+profile.name+" işe başladı.");
@@ -332,7 +333,7 @@ function showVineyard(){
   for(const [i,p] of s.land.entries()){
    html+='<div class="staff-plot"><h3>🌿 Bağ '+(i+1)+(p.grape?' · '+escapeHtml(grape(p.grape)?.name||"Üzüm"):' · Henüz dikim yok')+'</h3>'+
    '<div class="small muted">Çalışan '+p.workers.length+' / '+(level()>=8?2:1)+' · Günlük '+fmt(plotPayroll(p))+' ₺ · '+(p.grape?'İlerleme '+Math.min(100,Math.floor((p.workProgress/30)*100))+'%':'Dikim yapılmadı')+'</div>'+
-   p.workers.map(w=>{const profile=staffProfile(w.profile);return '<div class="staff-current"><div><strong>'+escapeHtml(profile?.name||"Bağ İşçisi")+'</strong><div class="small muted">'+(profile?.skills||"Bağ bakımı")+' · '+fmt(dailyWage(profile||FIELD_STAFF[0]))+' ₺/gün</div></div><button class="btn" onclick="dismissFieldWorker('+i+','+w.id+')">İşten çıkar</button></div>'}).join("")+
+   p.workers.map(w=>{const profile=staffProfile(w.profile);return '<div class="staff-current"><div><strong>'+escapeHtml(w.name||"Bağ Çalışanı")+' · '+escapeHtml(profile?.name||"Bağ İşçisi")+'</strong><div class="small muted">'+(profile?.skills||"Bağ bakımı")+' · '+fmt(dailyWage(profile||FIELD_STAFF[0]))+' ₺/gün</div></div><button class="btn" onclick="dismissFieldWorker('+i+','+w.id+')">İşten çıkar</button></div>'}).join("")+
    '<h3 style="margin:18px 0 9px">İşe alım adayları</h3>'+
    FIELD_STAFF.map(prof=>'<div class="staff-card"><div><strong>'+escapeHtml(prof.name)+'</strong><div class="small muted">'+prof.skills+'</div><div class="small">⏱️ '+Math.round(prof.speed*100)+'% çalışma hızı · 🍇 +'+Math.round(prof.yieldBonus*100)+'% rekolte</div><div class="staff-pay">Yevmiye '+fmt(dailyWage(prof))+' ₺ · 30 gün '+fmt(dailyWage(prof)*30)+' ₺</div></div><button class="btn primary" '+(level()<prof.unlock||p.workers.length>=(level()>=8?2:1)||s.cash<3*dailyWage(prof)?'disabled':'')+' onclick="hireFieldWorker('+i+',\''+prof.id+'\')">'+(level()<prof.unlock?'🔒 Seviye '+prof.unlock:'İşe al')+'</button></div>').join("")+'</div>';
   }
