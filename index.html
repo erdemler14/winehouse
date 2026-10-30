@@ -41,7 +41,10 @@ html,body{height:100%;overflow:hidden}body{background:#c7d8be;color:#26362f}
 @media(max-width:850px){.topbar{padding:10px 17px;gap:8px;height:auto;min-height:64px;flex-wrap:wrap}.brand{font-size:25px}.topdivider{display:none}.topinfo{font-size:11px}.scene-label{left:18px;bottom:112px}.scene-label h1{font-size:25px}.dock{width:calc(100% - 18px);max-width:540px;bottom:9px;padding:8px 6px;gap:3px;justify-content:space-around;border-radius:20px}.dock-button{min-width:0;flex:1;max-width:60px;height:54px;border-radius:13px}.dock-button svg{width:23px;height:23px}.modal-overlay{padding:9px}.modal-window{padding:18px 15px 22px;border-radius:19px;max-height:calc(100dvh - 94px)}#setup.layout{grid-template-columns:1fr}.wine-chips{grid-template-columns:1fr 1fr}}
 @media(max-height:620px){.modal-window{max-height:calc(100dvh - 50px)}.dock{bottom:7px}.scene-label{display:none}}
 @media(prefers-reduced-motion:reduce){.dock-button{transition:none}}
-</style></head><body>
+ .name-input{width:100%;min-width:0;padding:12px 14px;border:1px solid #d6d9d7;border-radius:11px;background:#fff;color:#22342c;font:inherit;outline-color:#6a8c72}
+ .input-label{display:block;font-size:12px;color:#697b70;font-weight:700;margin:13px 0 6px}
+ .name-row{display:flex;gap:9px;align-items:center}
+ </style></head><body>
 <div class="world" aria-label="Pastel bağlar, Türkiye köyleri ve şaraphane illüstrasyonu"></div>
 <header class="topbar"><div class="brand">🍇 Winehouse</div><div class="fill"></div><span class="topinfo"><b id="money">35.000</b> ₺</span><span class="topdivider"></span><span class="topinfo">★ <b id="level">1</b>. Seviye</span><span class="topdivider"></span><span class="topinfo">☀ <b id="clock">1. Gün, 08:00</b></span><button class="btn small clockpause" aria-label="Zamanı durdur veya devam ettir" id="pause" onclick="pauseGame()">⏸</button></header>
 <div class="scene-label"><span class="scene-kicker" id="stage">ÜRETİMHANE</span><h1 id="headline">Kendi şaraphaneni kur.</h1><span id="subtitle">Türkiye'de üretim yapacağın şehri seçerek başla.</span></div>
@@ -51,7 +54,7 @@ html,body{height:100%;overflow:hidden}body{background:#c7d8be;color:#26362f}
   <div class="modal-head"><div><div class="modal-eyebrow">WINEHOUSE</div><h2 id="panelHeading">Üzüm Pazarı</h2></div><button type="button" id="modalClose" class="modal-x" onclick="closePanel()" aria-label="Pencereyi kapat">✕</button></div>
   <section id="setup" class="layout">
    <div><div class="card"><h2>01 · Şehrini seç</h2><p class="muted small">Şehir seçimin kuruluş ve üzüm lojistik maliyetini etkiler.</p><div class="map" id="map"></div><div class="citygrid" id="cities"></div></div></div>
-   <div><div class="card"><h2>02 · İlk üretimhanen</h2><p class="muted">Başlangıç sermayenle küçük bir üretimhane kur. Bir tank ve temel ekipman kuruluş paketine dahil.</p><div id="estimate"></div><button class="btn primary full" onclick="build()">Üretimhaneyi kur</button></div>
+   <div><div class="card"><h2>02 · İlk üretimhanen</h2><p class="muted">Başlangıç sermayenle küçük bir üretimhane kur. Bir tank ve temel ekipman kuruluş paketine dahil.</p><label class="input-label" for="setupWineryName">Şaraphanene isim ver</label><input id="setupWineryName" class="name-input" maxlength="35" placeholder="Örn. Güneşli Bağlar" autocomplete="off"><div id="estimate"></div><button class="btn primary full" onclick="build()">Üretimhaneyi kur</button></div>
     <div class="hint">Üzümün geldiği şehir ile üretim şehrin arasındaki mesafe nakliye bedelini etkiler. Fiyatlar oyun ekonomisine aittir.</div></div>
   </section>
   <section id="game" class="hidden"><div id="content"></div></section>
@@ -81,7 +84,10 @@ if(!s.built){$("map").innerHTML=CITIES.map(c=>'<button class="pin '+(c.n===s.cit
 $("location").textContent=s.city;$("capacity").textContent=capacity()+" kg";$("grapestock").textContent=Object.values(s.grapes).reduce((a,b)=>a+b,0)+" kg";$("factory").innerHTML='<div class="row"><span>🏭 Üretimhane</span><b>'+s.city+'</b></div><div class="row"><span>Çelik tank</span><b>'+s.tanks+' adet</b></div><div class="row"><span>Toplam tank kapasitesi</span><b>'+capacity()+' kg</b></div><div class="row"><span>Üretimde</span><b>'+active()+' kg</b></div><div class="row"><span>Bir sonraki tank</span><b>'+fmt(5000*s.tanks)+' ₺</b></div><button class="btn full" onclick="buyTank()" '+(level()<s.tanks*2||s.cash<5000*s.tanks?"disabled":"")+'>+ Tank satın al '+(level()<s.tanks*2?"· Seviye "+(s.tanks*2)+" gerekli":"")+'</button><div class="hint" style="margin-top:12px">Her tank 100 kg üretim kapasitesi ekler. İkinci tank seviye 2, üçüncü tank seviye 4 düzeyinde açılır. Başlangıç ekipmanı dahildir.</div>';$("logs").innerHTML=s.logs.map(x=>'<div class="row small">'+x+'</div>').join("");$("orderBadge").textContent=s.unread?"🔴 "+s.unread:"";$("dockBadge").textContent=s.unread?Math.min(99,s.unread):"";$("dockBadge").classList.toggle("hidden",!s.unread);for(const v of ["market","produce","sales","vineyard"])$("tab-"+v).classList.toggle("active",s.view===v);if(s.view==="market")showMarket();if(s.view==="produce")showProduction();if(s.view==="sales")showSales();if(s.view==="vineyard")showVineyard();if(s.view==="factory")showFactory();if(s.view==="finance")showFinance();if(s.view==="settings")showSettings();
 }
 function selectCity(n){if(s.built)return;s.city=n;save()}
-function build(){let fee=city(s.city).fee;if(s.built||s.cash<fee)return toast("Yeterli bütçe yok.");s.cash-=fee;s.built=true;s.xp+=20;log(s.city+" üretimhanesi kuruldu; 1 tank hazır.");save();closePanel();toast("🏭 Üretimhanen hazır! Alt menüden üzüm pazarına gidebilirsin.")}
+function cleanName(t){return String(t||"").replace(/[<>]/g,"").trim().slice(0,35)}
+function escapeHtml(t){return String(t||"").replace(/[&<>"\u0027]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","\u0027":"&#39;"}[c]))}
+function setWineryName(){const el=$("renameWinery");const name=cleanName(el?.value);if(!name)return toast("Şaraphanen için bir isim yaz.");s.wineryName=name;log("Şaraphanenin adı "+name+" olarak değiştirildi.");save();toast("Yeni isim kaydedildi.");}
+function build(){let fee=city(s.city).fee;if(s.built||s.cash<fee)return toast("Yeterli bütçe yok.");s.cash-=fee;s.built=true;s.wineryName=cleanName($("setupWineryName")?.value)||s.city+" Bağları";s.xp+=20;log(s.city+" üretimhanesi kuruldu; 1 tank hazır.");save();closePanel();toast("🏭 Üretimhanen hazır! Alt menüden üzüm pazarına gidebilirsin.")}
 function buyTank(){if(level()<s.tanks*2)return toast("Önce seviye atlamalısın.");let fee=5000*s.tanks;if(s.cash<fee)return toast("Yeterli bütçe yok.");s.cash-=fee;s.tanks++;log("Yeni üretim tankı satın alındı.");save()}
 function tab(v){s.view=v;if(v==="sales"){s.unread=0;s.unreadIds=[];}save()}
 const LABELS={market:"Üzüm Pazarı",produce:"Şarap Üretimi",sales:"Müşteri Siparişleri",vineyard:"Bağ Arazisi",factory:"Şaraphanem",finance:"Finans",settings:"Ayarlar"};
@@ -101,7 +107,10 @@ function closePanel(){
 }
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closePanel()});
 function showFactory(){
- $("content").innerHTML='<div class="wine-chips"><div><small>Konum</small><strong>'+s.city+'</strong></div><div><small>Tank</small><strong>'+s.tanks+' adet</strong></div><div><small>Kapasite</small><strong>'+capacity()+' kg</strong></div></div><div style="margin-top:20px">'+$("factory").innerHTML+'</div><h3 style="margin-top:22px">İşletme Günlüğü</h3>'+$("logs").innerHTML;
+ const next=GRAPES.find(g=>g.level>level());
+ const required=Math.round(220*Math.pow(level(),1.4));
+ $("content").innerHTML='<label class="input-label" for="renameWinery">Şaraphanemin adı</label><div class="name-row"><input id="renameWinery" class="name-input" maxlength="35" value="'+escapeHtml(s.wineryName||"Şaraphanem")+'"><button class="btn primary" onclick="setWineryName()">Kaydet</button></div><div class="hint" style="margin:14px 0">⭐ Seviye '+level()+' · '+s.xp+' TP · Sonraki seviyeye '+Math.max(0,required-s.xp)+' TP. '+(next?'Sıradaki üzüm: '+next.name+' (Seviye '+next.level+')':'Tüm üzüm çeşitleri açık')+'</div>'+
+ '<div class="wine-chips"><div><small>Konum</small><strong>'+s.city+'</strong></div><div><small>Tank</small><strong>'+s.tanks+' adet</strong></div><div><small>Kapasite</small><strong>'+capacity()+' kg</strong></div></div><div style="margin-top:20px">'+$("factory").innerHTML+'</div><h3 style="margin-top:22px">İşletme Günlüğü</h3>'+$("logs").innerHTML;
 }
 function showFinance(){
  const qty=Object.values(s.grapes).reduce((a,b)=>a+b,0);
